@@ -1,11 +1,11 @@
-import { ComponentRef, Injectable, Injector, NgZone, SecurityContext, inject, signal, computed } from '@angular/core';
+import { ComponentRef, Injectable, Injector, SecurityContext, inject, signal, computed } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 
 import { ToastRef } from './toast-ref';
-import { ToastContainerDirective } from './toast.directive';
+
 import {
   GlobalConfig,
   IndividualConfig,
@@ -28,14 +28,13 @@ export class ToastrService {
   private overlay = inject(Overlay);
   private _injector = inject(Injector);
   private sanitizer = inject(DomSanitizer);
-  private ngZone = inject(NgZone);
 
   toastrConfig: GlobalConfig;
   
   toasts = signal<ActiveToast<unknown>[]>([]);
   currentlyActive = computed(() => this.toasts().filter(t => !t.toastRef.isInactive()).length);
   
-  overlayContainer?: ToastContainerDirective;
+
   previousToastMessage: string | undefined;
   private index = 0;
 
@@ -59,7 +58,7 @@ export class ToastrService {
     override: Partial<IndividualConfig<ConfigPayload>> = {},
     type = '',
   ) {
-    return this._preBuildNotification(
+    return this._buildNotification(
       type,
       message,
       title,
@@ -73,7 +72,7 @@ export class ToastrService {
     override: Partial<IndividualConfig<ConfigPayload>> = {},
   ) {
     const type = this.toastrConfig.iconClasses.success || '';
-    return this._preBuildNotification(type, message, title, this.applyConfig(override));
+    return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
   error<ConfigPayload = unknown>(
@@ -82,7 +81,7 @@ export class ToastrService {
     override: Partial<IndividualConfig<ConfigPayload>> = {},
   ) {
     const type = this.toastrConfig.iconClasses.error || '';
-    return this._preBuildNotification(type, message, title, this.applyConfig(override));
+    return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
   info<ConfigPayload = unknown>(
@@ -91,7 +90,7 @@ export class ToastrService {
     override: Partial<IndividualConfig<ConfigPayload>> = {},
   ) {
     const type = this.toastrConfig.iconClasses.info || '';
-    return this._preBuildNotification(type, message, title, this.applyConfig(override));
+    return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
   warning<ConfigPayload = unknown>(
@@ -100,7 +99,7 @@ export class ToastrService {
     override: Partial<IndividualConfig<ConfigPayload>> = {},
   ) {
     const type = this.toastrConfig.iconClasses.warning || '';
-    return this._preBuildNotification(type, message, title, this.applyConfig(override));
+    return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
   clear(toastId?: number) {
@@ -159,18 +158,6 @@ export class ToastrService {
       }
     }
     return null;
-  }
-
-  private _preBuildNotification(
-    toastType: string,
-    message: string | undefined,
-    title: string | undefined,
-    config: GlobalConfig,
-  ): ActiveToast<unknown> | null {
-    if (config.onActivateTick) {
-      return this.ngZone.run(() => this._buildNotification(toastType, message, title, config));
-    }
-    return this._buildNotification(toastType, message, title, config);
   }
 
   private _buildNotification(

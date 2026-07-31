@@ -4,7 +4,7 @@ import { ToastBase } from '../base-toast/base-toast.component';
 @Component({
   selector: '[toast-component]',
   templateUrl: '../base-toast/base-toast.component.html',
-  styleUrl: './toast.component.scss',
+  styleUrl: 'toast.component.css',
   host: {
     '[style.--animation-easing]': 'params.easing',
     '[style.--animation-duration]': 'params.easeTime + "ms"',
@@ -23,7 +23,7 @@ export class Toast<ConfigPayload = unknown> extends ToastBase<ConfigPayload> {
     clearTimeout(this.timeout);
     this.state.set('removed');
     this.elementRef.nativeElement.classList.add('toast-out');
-    this.timeout = this.timeoutsService.setTimeout(
+    this.timeout = window.setTimeout(
       () => this.toastrService.remove(this.toastPackage.toastId),
       +this.params.easeTime,
     );

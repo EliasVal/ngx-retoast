@@ -21,7 +21,6 @@ export interface IndividualConfig<ConfigPayload = unknown> {
   easeTime: string | number;
   tapToDismiss: boolean;
   toastComponent?: ComponentType<unknown>;
-  onActivateTick: boolean;
   newestOnTop: boolean;
   payload?: ConfigPayload;
 }
@@ -98,7 +97,6 @@ export const DefaultNoComponentGlobalConfig: GlobalConfig = {
   easing: 'ease-in',
   easeTime: 300,
   tapToDismiss: true,
-  onActivateTick: false,
   progressAnimation: 'decreasing',
 };
 
