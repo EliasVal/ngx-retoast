@@ -20,7 +20,7 @@ import { ToastrService } from '../toastr.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'toastClasses()',
-    '[style.display]': 'displayStyle()',
+    '[style.visibility]': 'visibilityStyle()',
     '(mouseenter)': 'stickAround()',
     '(mouseleave)': 'delayedHideToast()',
     '(click)': 'tapToast()',
@@ -31,14 +31,14 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   protected toastrService = inject(ToastrService);
   protected appRef = inject(ApplicationRef);
 
-  duplicatesCount!: number;
+  readonly duplicatesCount = signal(0);
   protected hideTime!: number;
 
   /** width of progress bar */
   readonly width = signal(-1);
   readonly state = signal<'inactive' | 'active' | 'removed'>('inactive');
   /** hides component when waiting to be displayed */
-  readonly displayStyle = computed(() => (this.state() === 'inactive' ? 'none' : undefined));
+  readonly visibilityStyle = computed(() => (this.state() === 'inactive' ? 'hidden' : undefined));
   readonly message = computed(() => this.toastPackage.message);
   readonly title = computed(() => this.toastPackage.title);
   readonly options = linkedSignal<IndividualConfig<ConfigPayload>>(() => this.toastPackage.config);
@@ -73,7 +73,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     });
 
     effect(() => {
-      this.duplicatesCount = this.toastPackage.toastRef.duplicateCount();
+      this.duplicatesCount.set(this.toastPackage.toastRef.duplicateCount());
     });
   }
 

@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "pnpm"
+    "packageManager": "pnpm",
+    "schematicCollections": ["@schematics/angular", "playwright-ng-schematics"]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -28,6 +29,13 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/ngx-retoast/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/ngx-retoast/**/*.ts", "projects/ngx-retoast/**/*.html"],
+            "eslintConfig": "projects/ngx-retoast/eslint.config.js"
           }
         }
       }
@@ -90,6 +98,24 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "e2e": {
+          "builder": "playwright-ng-schematics:playwright",
+          "options": {
+            "devServerTarget": "showcase:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "showcase:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/showcase/**/*.ts", "projects/showcase/**/*.html"],
+            "eslintConfig": "projects/showcase/eslint.config.js"
+          }
         }
       }
     }

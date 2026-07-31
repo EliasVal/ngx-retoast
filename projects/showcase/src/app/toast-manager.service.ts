@@ -7,9 +7,6 @@ import {
   type GlobalConfig,
   type IndividualConfig,
 } from 'ngx-retoast';
-import { BootstrapToast } from './bootstrap-toast/bootstrap-toast.component';
-import { NotyfToast } from './notyf-toast/notyf-toast.component';
-import { PinkToast } from './pink-toast/pink-toast.component';
 import { quotes, type Quote } from './quotes';
 
 @Injectable({ providedIn: 'root' })
@@ -20,54 +17,19 @@ export class ToastManagerService {
   public openToastAnimation(options?: GlobalConfig, type?: string, quote?: Quote) {
     const _options = { ...(options ?? this.toastr.toastrConfig) };
 
-    return this.openToast<PinkToast>(_options, quote, _options.iconClasses[type ?? 'success']);
+    return this.openToast(_options, quote, _options.iconClasses[type ?? 'success']);
   }
 
   public openToastNoAnimation(options?: GlobalConfig, type?: string, quote?: Quote) {
     const _options = { ...(options ?? this.toastr.toastrConfig) };
 
-    return this.openToast<PinkToast>(
+    return this.openToast(
       {
         ..._options,
         toastComponent: ToastNoAnimation,
       },
       quote,
       _options.iconClasses[type ?? 'success'],
-    );
-  }
-
-  public openPinkToast(options?: IndividualConfig, quote?: Quote) {
-    return this.openToast<PinkToast>(
-      {
-        ...(options ?? this.toastr.toastrConfig),
-
-        toastClass: 'pinktoast',
-        toastComponent: PinkToast,
-      },
-      quote,
-    );
-  }
-
-  public openBootstrapToast(options?: IndividualConfig, quote?: Quote) {
-    return this.openToast<BootstrapToast>(
-      {
-        ...(options ?? this.toastr.toastrConfig),
-
-        toastClass: 'toast',
-        toastComponent: BootstrapToast,
-      },
-      quote,
-    );
-  }
-
-  public openNotyf(options?: IndividualConfig, quote?: Quote) {
-    return this.openToast<NotyfToast>(
-      {
-        ...(options ?? this.toastr.toastrConfig),
-        toastClass: 'notyf confirm',
-        toastComponent: NotyfToast,
-      },
-      quote,
     );
   }
 

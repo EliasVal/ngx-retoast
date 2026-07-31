@@ -8,7 +8,8 @@ import { ToastBase } from '../base-toast/base-toast.component';
   host: {
     '[style.--animation-easing]': 'params.easing',
     '[style.--animation-duration]': 'params.easeTime + "ms"',
-    'animate.enter': 'toast-in',
+    '[class.toast-in]': 'state() === "active"',
+    '[class.toast-out]': 'state() === "removed"',
   },
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

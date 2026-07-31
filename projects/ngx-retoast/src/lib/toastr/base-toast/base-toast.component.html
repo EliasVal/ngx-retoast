@@ -10,8 +10,8 @@
   <div [class]="_options.titleClass" [attr.aria-label]="title()">
     {{ title() }}
 
-    @if (duplicatesCount) {
-      <ng-container>[{{ duplicatesCount + 1 }}]</ng-container>
+    @if (duplicatesCount()) {
+      <ng-container>[{{ duplicatesCount() + 1 }}]</ng-container>
     }
   </div>
 }

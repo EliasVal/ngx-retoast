@@ -14,7 +14,7 @@ import {
   ToastToken,
   TOAST_CONFIG,
 } from './toastr-config';
-import type { ToastBase } from './base-toast/base-toast.component';
+import { ToastBase } from './base-toast/base-toast.component';
 
 export interface ActiveToast<C> {
   toastId: number;
@@ -107,14 +107,18 @@ export class ToastrService {
   }
 
   clear(toastId?: number) {
-    for (const toast of this.toasts()) {
+    // Copy the array to avoid concurrent modification issues during iteration
+    const currentToasts = [...this.toasts()];
+    for (const toast of currentToasts) {
       if (toastId !== undefined) {
         if (toast.toastId === toastId) {
           toast.toastRef.manualClose();
+          this.remove(toast.toastId);
           return;
         }
       } else {
         toast.toastRef.manualClose();
+        this.remove(toast.toastId);
       }
     }
   }
@@ -177,6 +181,43 @@ export class ToastrService {
     return this.overlayContainers.get(positionClass)!;
   }
 
+  private animateFlip(container: HTMLElement, action: () => void) {
+    const children = Array.from(container.children) as HTMLElement[];
+    const firstRects = new Map<HTMLElement, DOMRect>();
+    children.forEach(child => firstRects.set(child, child.getBoundingClientRect()));
+
+    action();
+
+    const remainingChildren = Array.from(container.children) as HTMLElement[];
+    remainingChildren.forEach(child => {
+      const first = firstRects.get(child);
+      if (first) {
+        const last = child.getBoundingClientRect();
+        const deltaY = first.top - last.top;
+        const deltaX = first.left - last.left;
+        
+        if (deltaX !== 0 || deltaY !== 0) {
+          child.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+          child.style.transition = 'none';
+          
+          // Force reflow
+          child.getBoundingClientRect();
+
+          requestAnimationFrame(() => {
+            child.style.transform = '';
+            child.style.transition = 'transform 150ms ease-in-out';
+            
+            const cleanup = () => {
+              child.style.transition = '';
+              child.removeEventListener('transitionend', cleanup);
+            };
+            child.addEventListener('transitionend', cleanup);
+          });
+        }
+      }
+    });
+  }
+
   private _buildNotification(
     toastType: string,
     message: string | undefined,
@@ -229,8 +270,15 @@ export class ToastrService {
 
     const toastRef = new ToastRef({
       detach: () => {
-        outlet.detach();
-        toastWrapper.remove();
+        const action = () => {
+          outlet.detach();
+          toastWrapper.remove();
+        };
+        if (config.toastComponent === ToastBase) {
+          action();
+        } else {
+          this.animateFlip(container, action);
+        }
       }
     });
     const toastPackage = new ToastPackage(
@@ -246,7 +294,18 @@ export class ToastrService {
     const toastInjector = Injector.create({ providers, parent: this._injector });
 
     const componentPortal = new ComponentPortal(config.toastComponent, null, toastInjector);
-    const portal = outlet.attach(componentPortal) as ComponentRef<unknown>;
+    
+    let portal!: ComponentRef<unknown>;
+    const attachAction = () => {
+      portal = outlet.attach(componentPortal) as ComponentRef<unknown>;
+      portal.changeDetectorRef.detectChanges();
+    };
+    
+    if (config.toastComponent === ToastBase) {
+      attachAction();
+    } else {
+      this.animateFlip(container, attachAction);
+    }
     toastRef.componentInstance = portal.instance;
     
     const ins: ActiveToast<unknown> = {
@@ -258,9 +317,14 @@ export class ToastrService {
     };
 
     if (!keepInactive) {
-      setTimeout(() => {
+      if (config.toastComponent === ToastBase) {
         ins.toastRef.activate();
-      });
+        ins.portal.changeDetectorRef.detectChanges();
+      } else {
+        setTimeout(() => {
+          ins.toastRef.activate();
+        });
+      }
     }
 
     this.toasts.update(toasts => [...toasts, ins]);
