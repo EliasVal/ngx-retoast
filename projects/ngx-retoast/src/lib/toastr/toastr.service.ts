@@ -1,8 +1,9 @@
-import { ComponentRef, Injectable, Injector, SecurityContext, inject, signal, computed } from '@angular/core';
+import { ComponentRef, Injectable, Injector, SecurityContext, inject, signal, computed, ApplicationRef } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { Overlay } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 
 import { ToastRef } from './toast-ref';
 
@@ -25,15 +26,18 @@ export interface ActiveToast<C> {
 
 @Injectable({ providedIn: 'root' })
 export class ToastrService {
-  private overlay = inject(Overlay);
+  private overlayContainer = inject(OverlayContainer);
   private _injector = inject(Injector);
   private sanitizer = inject(DomSanitizer);
+  private appRef = inject(ApplicationRef);
+  private document = inject(DOCUMENT);
 
   toastrConfig: GlobalConfig;
   
   toasts = signal<ActiveToast<unknown>[]>([]);
   currentlyActive = computed(() => this.toasts().filter(t => !t.toastRef.isInactive()).length);
   
+  private overlayContainers = new Map<string, HTMLElement>();
 
   previousToastMessage: string | undefined;
   private index = 0;
@@ -160,6 +164,19 @@ export class ToastrService {
     return null;
   }
 
+  private getContainerElement(positionClass: string): HTMLElement {
+    if (!this.overlayContainers.has(positionClass)) {
+      const container = this.document.createElement('div');
+      container.classList.add('toast-container');
+      if (positionClass) {
+        container.classList.add(...positionClass.split(' '));
+      }
+      this.overlayContainer.getContainerElement().appendChild(container);
+      this.overlayContainers.set(positionClass, container);
+    }
+    return this.overlayContainers.get(positionClass)!;
+  }
+
   private _buildNotification(
     toastType: string,
     message: string | undefined,
@@ -194,9 +211,15 @@ export class ToastrService {
       }
     }
 
-    const overlayRef = this.overlay.create({
-      panelClass: ['toast-container', config.positionClass],
-    });
+    const container = this.getContainerElement(config.positionClass);
+    const toastWrapper = this.document.createElement('div');
+    if (config.newestOnTop) {
+      container.prepend(toastWrapper);
+    } else {
+      container.appendChild(toastWrapper);
+    }
+    
+    const outlet = new DomPortalOutlet(toastWrapper, this.appRef, this._injector);
 
     this.index = this.index + 1;
     let sanitizedMessage: string | undefined | null = message;
@@ -204,7 +227,12 @@ export class ToastrService {
       sanitizedMessage = this.sanitizer.sanitize(SecurityContext.HTML, message);
     }
 
-    const toastRef = new ToastRef(overlayRef);
+    const toastRef = new ToastRef({
+      detach: () => {
+        outlet.detach();
+        toastWrapper.remove();
+      }
+    });
     const toastPackage = new ToastPackage(
       this.index,
       config,
@@ -218,7 +246,7 @@ export class ToastrService {
     const toastInjector = Injector.create({ providers, parent: this._injector });
 
     const componentPortal = new ComponentPortal(config.toastComponent, null, toastInjector);
-    const portal = overlayRef.attach(componentPortal);
+    const portal = outlet.attach(componentPortal) as ComponentRef<unknown>;
     toastRef.componentInstance = portal.instance;
     
     const ins: ActiveToast<unknown> = {

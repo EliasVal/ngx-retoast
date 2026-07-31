@@ -1,5 +1,7 @@
 import { signal } from '@angular/core';
-import { OverlayRef } from '@angular/cdk/overlay';
+export interface ToastCloseFn {
+  detach(): void;
+}
 
 export class ToastRef<T> {
   componentInstance!: T;
@@ -9,7 +11,7 @@ export class ToastRef<T> {
   timeoutReset = signal<number>(0);
   duplicateCount = signal<number>(0);
 
-  constructor(private _overlayRef: OverlayRef) {}
+  constructor(private _overlayRef: ToastCloseFn) {}
 
   manualClose() {
     this.manualClosed.set(true);

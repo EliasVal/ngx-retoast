@@ -1,5 +1,9 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { App } from './app/app';
+import { AppComponent } from './app/app.component';
+import { provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideToastr } from 'ngx-retoast';
 
-bootstrapApplication(App, appConfig).catch((err) => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [provideBrowserGlobalErrorListeners(), provideToastr()],
+}).catch(err => console.error(err));
+

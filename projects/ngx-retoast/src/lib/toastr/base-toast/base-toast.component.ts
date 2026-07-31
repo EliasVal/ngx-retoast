@@ -146,8 +146,9 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
 
     clearTimeout(this.timeout);
     this.state.set('removed');
-    this.timeout = window.setTimeout(() =>
-      this.toastrService.remove(this.toastPackage.toastId),
+    this.timeout = window.setTimeout(
+      () => this.toastrService.remove(this.toastPackage.toastId),
+      Number(this.options().easeTime) || 0
     );
   }
 
