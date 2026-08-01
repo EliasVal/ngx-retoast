@@ -44,26 +44,26 @@ export interface GlobalConfig<C = unknown> extends IndividualConfig<C> {
 }
 
 export class ToastPackage<ConfigPayload = unknown> {
-  tap = signal<number>(0);
-  action = signal<unknown>(undefined);
+  public readonly tap = signal<number>(0);
+  public readonly action = signal<unknown>(undefined);
 
   constructor(
-    public toastId: number,
-    public config: IndividualConfig<ConfigPayload>,
-    public message: string | null | undefined,
-    public title: string | undefined,
-    public toastType: string,
-    public toastRef: ToastRef<unknown>,
+    public readonly toastId: number,
+    public readonly config: IndividualConfig<ConfigPayload>,
+    public readonly message: string | null | undefined,
+    public readonly title: string | undefined,
+    public readonly toastType: string,
+    public readonly toastRef: ToastRef<unknown>,
   ) {}
 
-  triggerTap(): void {
+  public triggerTap(): void {
     this.tap.update((v) => v + 1);
     if (this.config.tapToDismiss) {
       this.toastRef.manualClose();
     }
   }
 
-  triggerAction(action?: unknown): void {
+  public triggerAction(action?: unknown): void {
     this.action.set(action);
   }
 }

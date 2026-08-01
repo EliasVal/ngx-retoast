@@ -37,24 +37,24 @@ export interface ActiveToast<C> {
 
 @Injectable({ providedIn: 'root' })
 export class ToastrService {
-  private _cdkOverlayContainer = inject(OverlayContainer);
+  private readonly _cdkOverlayContainer = inject(OverlayContainer);
   private _customContainer?: HTMLElement;
-  private _injector = inject(Injector);
-  private sanitizer = inject(DomSanitizer);
-  private appRef = inject(ApplicationRef);
-  private document = inject(DOCUMENT);
+  private readonly _injector = inject(Injector);
+  private readonly sanitizer = inject(DomSanitizer);
+  private readonly appRef = inject(ApplicationRef);
+  private readonly document = inject(DOCUMENT);
 
-  toastrConfig: GlobalConfig;
+  public readonly toastrConfig: GlobalConfig;
 
-  toasts = signal<ActiveToast<unknown>[]>([]);
-  currentlyActive = computed(() => this.toasts().filter((t) => !t.toastRef.isInactive()).length);
+  public readonly toasts = signal<ActiveToast<unknown>[]>([]);
+  public readonly currentlyActive = computed(() => this.toasts().filter((t) => !t.toastRef.isInactive()).length);
 
-  private overlayContainers = new Map<string, HTMLElement>();
+  private readonly overlayContainers = new Map<string, HTMLElement>();
 
-  previousToastMessage: string | undefined;
+  public previousToastMessage: string | undefined;
   private index = 0;
 
-  set overlayContainer(container: ToastContainerDirective | undefined) {
+  public set overlayContainer(container: ToastContainerDirective | undefined) {
     if (container) {
       this._customContainer = container.getContainerElement();
     } else {
@@ -76,7 +76,7 @@ export class ToastrService {
     }
   }
 
-  show<C extends ToastBase = ToastBase, ConfigPayload = unknown>(
+  public show<C extends ToastBase = ToastBase, ConfigPayload = unknown>(
     message?: string,
     title?: string,
     override: Partial<IndividualConfig<ConfigPayload>> = {},
@@ -90,7 +90,7 @@ export class ToastrService {
     ) as ActiveToast<C> | null;
   }
 
-  success<ConfigPayload = unknown>(
+  public success<ConfigPayload = unknown>(
     message?: string,
     title?: string,
     override: Partial<IndividualConfig<ConfigPayload>> = {},
@@ -99,7 +99,7 @@ export class ToastrService {
     return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
-  error<ConfigPayload = unknown>(
+  public error<ConfigPayload = unknown>(
     message?: string,
     title?: string,
     override: Partial<IndividualConfig<ConfigPayload>> = {},
@@ -108,7 +108,7 @@ export class ToastrService {
     return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
-  info<ConfigPayload = unknown>(
+  public info<ConfigPayload = unknown>(
     message?: string,
     title?: string,
     override: Partial<IndividualConfig<ConfigPayload>> = {},
@@ -117,7 +117,7 @@ export class ToastrService {
     return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
-  warning<ConfigPayload = unknown>(
+  public warning<ConfigPayload = unknown>(
     message?: string,
     title?: string,
     override: Partial<IndividualConfig<ConfigPayload>> = {},
@@ -126,7 +126,7 @@ export class ToastrService {
     return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
-  clear(toastId?: number) {
+  public clear(toastId?: number) {
     // Copy the array to avoid concurrent modification issues during iteration
     const currentToasts = [...this.toasts()];
     for (const toast of currentToasts) {
@@ -143,7 +143,7 @@ export class ToastrService {
     }
   }
 
-  remove(toastId: number) {
+  public remove(toastId: number) {
     const found = this._findToast(toastId);
     if (!found) {
       return false;
@@ -166,7 +166,7 @@ export class ToastrService {
     return true;
   }
 
-  findDuplicate(title = '', message = '', resetOnDuplicate: boolean, countDuplicates: boolean) {
+  public findDuplicate(title = '', message = '', resetOnDuplicate: boolean, countDuplicates: boolean) {
     const { includeTitleDuplicates } = this.toastrConfig;
     for (const toast of this.toasts()) {
       const hasDuplicateTitle = includeTitleDuplicates && toast.title === title;

@@ -4,38 +4,38 @@ export interface ToastCloseFn {
 }
 
 export class ToastRef<T> {
-  componentInstance!: T;
+  public componentInstance!: T;
 
-  state = signal<'inactive' | 'active' | 'closing' | 'closed'>('inactive');
-  manualClosed = signal(false);
-  timeoutReset = signal<number>(0);
-  duplicateCount = signal<number>(0);
+  public readonly state = signal<'inactive' | 'active' | 'closing' | 'closed'>('inactive');
+  public readonly manualClosed = signal(false);
+  public readonly timeoutReset = signal<number>(0);
+  public readonly duplicateCount = signal<number>(0);
 
-  constructor(private _overlayRef: ToastCloseFn) {}
+  constructor(private readonly _overlayRef: ToastCloseFn) {}
 
-  manualClose() {
+  public manualClose() {
     this.manualClosed.set(true);
     this.close();
   }
 
-  close(): void {
+  public close(): void {
     if (this.state() === 'closed') return;
     this.state.set('closing');
     this._overlayRef.detach();
     this.state.set('closed');
   }
 
-  isInactive() {
+  public isInactive() {
     return this.state() === 'inactive' || this.state() === 'closed';
   }
 
-  activate() {
+  public activate() {
     if (this.state() === 'inactive') {
       this.state.set('active');
     }
   }
 
-  onDuplicate(resetTimeout: boolean, countDuplicate: boolean) {
+  public onDuplicate(resetTimeout: boolean, countDuplicate: boolean) {
     if (resetTimeout) {
       this.timeoutReset.update(v => v + 1);
     }

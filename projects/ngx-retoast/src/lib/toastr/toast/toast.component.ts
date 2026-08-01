@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ChangeDetectorRef } from '@angular/core';
 import { ToastBase } from '../base-toast/base-toast.component';
 
 @Component({
@@ -15,9 +15,8 @@ import { ToastBase } from '../base-toast/base-toast.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Toast<ConfigPayload = unknown> extends ToastBase<ConfigPayload> {
-  readonly params = { easeTime: this.toastPackage.config.easeTime, easing: this.toastPackage.config.easing };
-  private cdr = inject(ChangeDetectorRef);
-  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected readonly params = { easeTime: this.toastPackage.config.easeTime, easing: this.toastPackage.config.easing };
+  private readonly cdr = inject(ChangeDetectorRef);
 
   override remove(): void {
     if (this.state() === 'removed') return;

@@ -31,18 +31,18 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   protected toastrService = inject(ToastrService);
   protected appRef = inject(ApplicationRef);
 
-  readonly duplicatesCount = signal(0);
+  public readonly duplicatesCount = signal(0);
   protected hideTime!: number;
 
   /** width of progress bar */
-  readonly width = signal(-1);
-  readonly state = signal<'inactive' | 'active' | 'removed'>('inactive');
-  readonly displayStyle = computed(() => (this.toastPackage.toastRef.state() === 'inactive' ? 'none' : undefined));
-  readonly message = computed(() => this.toastPackage.message);
-  readonly title = computed(() => this.toastPackage.title);
-  readonly options = linkedSignal<IndividualConfig<ConfigPayload>>(() => this.toastPackage.config);
-  readonly originalTimeout = computed(() => this.toastPackage.config.timeOut);
-  readonly toastClasses = computed(
+  public readonly width = signal(-1);
+  public readonly state = signal<'inactive' | 'active' | 'removed'>('inactive');
+  public readonly displayStyle = computed(() => (this.toastPackage.toastRef.state() === 'inactive' ? 'none' : undefined));
+  public readonly message = computed(() => this.toastPackage.message);
+  public readonly title = computed(() => this.toastPackage.title);
+  public readonly options = linkedSignal<IndividualConfig<ConfigPayload>>(() => this.toastPackage.config);
+  public readonly originalTimeout = computed(() => this.toastPackage.config.timeOut);
+  public readonly toastClasses = computed(
     () => `${this.toastPackage.toastType} ${this.toastPackage.config.toastClass}`,
   );
 
@@ -84,7 +84,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   /**
    * activates toast and sets timeout
    */
-  activateToast() {
+  protected activateToast() {
     const options = this.options();
     this.state.set('active');
 
@@ -103,7 +103,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   /**
    * updates progress bar width
    */
-  updateProgress() {
+  protected updateProgress() {
     const options = this.options();
 
     if (this.width() === 0 || this.width() === 100 || !options.timeOut) {
@@ -123,7 +123,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     }
   }
 
-  resetTimeout() {
+  protected resetTimeout() {
     const options = this.options();
     clearTimeout(this.timeout);
     clearInterval(this.intervalId);
@@ -140,7 +140,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   /**
    * tells toastrService to remove this toast after animation time
    */
-  remove() {
+  public remove() {
     if (this.state() === 'removed') return;
 
     clearTimeout(this.timeout);
@@ -151,7 +151,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     );
   }
 
-  tapToast() {
+  protected tapToast() {
     if (this.state() === 'removed') return;
 
     this.toastPackage.triggerTap();
@@ -160,7 +160,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     }
   }
 
-  stickAround() {
+  protected stickAround() {
     if (this.state() === 'removed') return;
 
     if (this.options().disableTimeOut !== 'extendedTimeOut') {
@@ -174,7 +174,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     }
   }
 
-  delayedHideToast() {
+  protected delayedHideToast() {
     const options = this.options();
     if (
       options.disableTimeOut === true ||
