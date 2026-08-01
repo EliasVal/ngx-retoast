@@ -174,13 +174,13 @@ Options can be provided globally via `provideRetoast(options)` or individually p
 
 These options can only be set globally via `provideRetoast(options)`.
 
-| Option                    | Type    | Default | Description                                                       |
-| :------------------------ | :------ | :------ | :---------------------------------------------------------------- |
-| `maxOpened`               | number  | 0       | Max toasts opened simultaneously. 0 is unlimited.                 |
-| `autoDismiss`             | boolean | false   | Automatically dismiss the oldest toast when maxOpened is reached. |
-| `preventDuplicates`       | boolean | false   | Block duplicate messages from being shown.                        |
-| `countDuplicates`         | boolean | false   | Display a counter on duplicate toasts.                            |
-| `resetDurationOnDuplicate` | boolean | false   | Reset the duration when a duplicate is received.                  |
+| Option                         | Type    | Default | Description                                                       |
+| :----------------------------- | :------ | :------ | :---------------------------------------------------------------- |
+| `maxOpened`                    | number  | 0       | Max toasts opened simultaneously. 0 is unlimited.                 |
+| `autoDismiss`                  | boolean | false   | Automatically dismiss the oldest toast when maxOpened is reached. |
+| `preventDuplicates`            | boolean | false   | Block duplicate messages from being shown.                        |
+| `countDuplicates`              | boolean | false   | Display a counter on duplicate toasts.                            |
+| `resetDurationOnDuplicate`     | boolean | false   | Reset the duration when a duplicate is received.                  |
 | `includeTitleInDuplicateCheck` | boolean | false   | Include the title when checking for duplicates.                   |
 
 ## Custom Toast Component
@@ -282,3 +282,8 @@ sub.unsubscribe();
 ### 4. Custom Toasts (Component Inheritance)
 
 If you built a custom toast component, the base class has been updated. You no longer need @angular/animations for custom entry/exit effects, as all list management and animation handling is automatically done via native CSS FLIP animations.
+
+## Previous Works
+
+- [ngx-toastr](https://github.com/scttcper/ngx-toastr): The base for ngx-retoast
+- [toastr](https://github.com/CodeSeven/toastr): Original Toastr

@@ -67,7 +67,6 @@
   font-weight: bold;
   color: #FFFFFF;
   text-shadow: 0 1px 0 #ffffff;
-  /* opacity: 0.8; */
 }
 .toast-close-button:hover,
 .toast-close-button:focus {
@@ -99,7 +98,7 @@ button.toast-close-button {
   margin: 0 0 6px;
   padding: 15px 15px 15px 50px;
   width: 300px;
-  border-radius: 3px 3px 3px 3px;
+  border-radius: 3px;
   background-position: 15px center;
   background-repeat: no-repeat;
   background-size: 24px;
@@ -164,7 +163,7 @@ button.toast-close-button {
 
 /* Responsive Design */
 @media all and (max-width: 240px) {
-  .toast-container .ngx-retoast.div {
+  .toast-container .ngx-retoast {
     padding: 8px 8px 8px 50px;
     width: 11em;
   }
@@ -174,7 +173,7 @@ button.toast-close-button {
   }
 }
 @media all and (min-width: 241px) and (max-width: 480px) {
-  .toast-container .ngx-retoast.div {
+  .toast-container .ngx-retoast {
     padding: 8px 8px 8px 50px;
     width: 18em;
   }
@@ -184,7 +183,7 @@ button.toast-close-button {
   }
 }
 @media all and (min-width: 481px) and (max-width: 768px) {
-  .toast-container .ngx-retoast.div {
+  .toast-container .ngx-retoast {
     padding: 15px 15px 15px 50px;
     width: 25em;
   }
