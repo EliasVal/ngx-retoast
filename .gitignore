@@ -48,3 +48,5 @@ Thumbs.db
 /playwright-report/
 /playwright/.cache/
 coverage-reports/
+.playwright
+.playwright-mcp

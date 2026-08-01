@@ -9,9 +9,8 @@ import {
   signal,
   type OnDestroy,
 } from '@angular/core';
-import { ToastPackage, type IndividualConfig } from '../toastr-config';
-import { ToastrService } from '../toastr.service';
-
+import { ToastPackage, type IndividualConfig } from '../retoast-config';
+import { RetoastService } from '../retoast.service';
 
 @Component({
   selector: '[toast-component]',
@@ -28,7 +27,7 @@ import { ToastrService } from '../toastr.service';
 })
 export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   public toastPackage = inject(ToastPackage);
-  protected toastrService = inject(ToastrService);
+  protected retoastService = inject(RetoastService);
   protected appRef = inject(ApplicationRef);
 
   public readonly duplicatesCount = signal(0);
@@ -37,10 +36,14 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   /** width of progress bar */
   public readonly width = signal(-1);
   public readonly state = signal<'inactive' | 'active' | 'removed'>('inactive');
-  public readonly displayStyle = computed(() => (this.toastPackage.toastRef.state() === 'inactive' ? 'none' : undefined));
+  public readonly displayStyle = computed(() =>
+    this.toastPackage.toastRef.state() === 'inactive' ? 'none' : undefined,
+  );
   public readonly message = computed(() => this.toastPackage.message);
   public readonly title = computed(() => this.toastPackage.title);
-  public readonly options = linkedSignal<IndividualConfig<ConfigPayload>>(() => this.toastPackage.config);
+  public readonly options = linkedSignal<IndividualConfig<ConfigPayload>>(
+    () => this.toastPackage.config,
+  );
   public readonly originalTimeout = computed(() => this.toastPackage.config.timeOut);
   public readonly toastClasses = computed(
     () => `${this.toastPackage.toastType} ${this.toastPackage.config.toastClass}`,
@@ -113,7 +116,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     const remaining = this.hideTime - now;
     this.width.set((remaining / options.timeOut) * 100);
     if (options.progressAnimation === 'increasing') {
-      this.width.update(width => 100 - width);
+      this.width.update((width) => 100 - width);
     }
     if (this.width() <= 0) {
       this.width.set(0);
@@ -129,16 +132,15 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     clearInterval(this.intervalId);
     this.state.set('active');
 
-    this.options.update(options => ({ ...options, timeOut: this.originalTimeout() }));
+    this.options.update((options) => ({ ...options, timeOut: this.originalTimeout() }));
     this.timeout = window.setTimeout(() => this.remove(), this.originalTimeout());
     this.hideTime = new Date().getTime() + (this.originalTimeout() || 0);
     this.width.set(-1);
-    if (options.progressBar)
-      this.intervalId = window.setInterval(() => this.updateProgress(), 10);
+    if (options.progressBar) this.intervalId = window.setInterval(() => this.updateProgress(), 10);
   }
 
   /**
-   * tells toastrService to remove this toast after animation time
+   * tells retoastService to remove this toast after animation time
    */
   public remove() {
     if (this.state() === 'removed') return;
@@ -146,8 +148,8 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     clearTimeout(this.timeout);
     this.state.set('removed');
     this.timeout = window.setTimeout(
-      () => this.toastrService.remove(this.toastPackage.toastId),
-      Number(this.options().easeTime) || 0
+      () => this.toastPackage.toastRef.close(),
+      0,
     );
   }
 
@@ -165,7 +167,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
 
     if (this.options().disableTimeOut !== 'extendedTimeOut') {
       clearTimeout(this.timeout);
-      this.options.update(options => ({ ...options, timeOut: 0 }));
+      this.options.update((options) => ({ ...options, timeOut: 0 }));
       this.hideTime = 0;
 
       // disable progressBar
@@ -186,7 +188,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     }
     const extendedTimeOut = options.extendedTimeOut;
     this.timeout = window.setTimeout(() => this.remove(), extendedTimeOut);
-    this.options.update(options => ({ ...options, timeOut: extendedTimeOut }));
+    this.options.update((options) => ({ ...options, timeOut: extendedTimeOut }));
     this.hideTime = new Date().getTime() + (extendedTimeOut || 0);
     this.width.set(-1);
     if (options.progressBar) {

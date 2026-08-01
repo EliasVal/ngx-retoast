@@ -25,7 +25,7 @@ export interface IndividualConfig<ConfigPayload = unknown> {
   payload?: ConfigPayload;
 }
 
-export interface ToastrIconClasses {
+export interface RetoastIconClasses {
   error: string;
   info: string;
   success: string;
@@ -36,11 +36,11 @@ export interface ToastrIconClasses {
 export interface GlobalConfig<C = unknown> extends IndividualConfig<C> {
   maxOpened: number;
   autoDismiss: boolean;
-  iconClasses: Partial<ToastrIconClasses>;
+  iconClasses: Partial<RetoastIconClasses>;
   preventDuplicates: boolean;
   countDuplicates: boolean;
   resetTimeoutOnDuplicate: boolean;
-  includeTitleDuplicates: boolean;
+  duplicateTitleCheck: boolean;
 }
 
 export class ToastPackage<ConfigPayload = unknown> {
@@ -58,6 +58,7 @@ export class ToastPackage<ConfigPayload = unknown> {
 
   public triggerTap(): void {
     this.tap.update((v) => v + 1);
+    this.toastRef._triggerTap();
     if (this.config.tapToDismiss) {
       this.toastRef.manualClose();
     }
@@ -65,6 +66,7 @@ export class ToastPackage<ConfigPayload = unknown> {
 
   public triggerAction(action?: unknown): void {
     this.action.set(action);
+    this.toastRef._triggerAction(action);
   }
 }
 
@@ -75,7 +77,7 @@ export const DefaultNoComponentGlobalConfig: GlobalConfig = {
   preventDuplicates: false,
   countDuplicates: false,
   resetTimeoutOnDuplicate: false,
-  includeTitleDuplicates: false,
+  duplicateTitleCheck: false,
 
   iconClasses: {
     error: 'toast-error',
@@ -90,7 +92,7 @@ export const DefaultNoComponentGlobalConfig: GlobalConfig = {
   extendedTimeOut: 1000,
   enableHtml: false,
   progressBar: false,
-  toastClass: 'ngx-toastr',
+  toastClass: 'ngx-retoast',
   positionClass: 'toast-top-right',
   titleClass: 'toast-title',
   messageClass: 'toast-message',

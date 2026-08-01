@@ -1,4 +1,4 @@
-import { DefaultNoComponentGlobalConfig, GlobalConfig, TOAST_CONFIG } from '../toastr-config';
+import { DefaultNoComponentGlobalConfig, GlobalConfig, TOAST_CONFIG } from '../retoast-config';
 import { EnvironmentProviders, makeEnvironmentProviders, Provider } from '@angular/core';
 import { Toast } from '../toast/toast.component';
 
@@ -11,23 +11,23 @@ export const DefaultGlobalConfig: GlobalConfig = {
  * @description
  * Provides the `TOAST_CONFIG` token with the given config.
  *
- * @param config The config to configure toastr.
+ * @param config The config to configure retoast.
  * @returns The environment providers.
  *
  * @example
  * ```ts
- * import { provideToastr } from 'ngx-toastr';
+ * import { provideRetoast } from 'ngx-retoast';
  *
  * bootstrap(AppComponent, {
  *   providers: [
- *     provideToastr({
+ *     provideRetoast({
  *       timeOut: 2000,
  *       positionClass: 'toast-top-right',
  *     }),
  *   ],
  * })
  */
-export const provideToastr = (config: Partial<GlobalConfig> = {}): EnvironmentProviders => {
+export const provideRetoast = (config: Partial<GlobalConfig> = {}): EnvironmentProviders => {
   const providers: Provider[] = [
     {
       provide: TOAST_CONFIG,

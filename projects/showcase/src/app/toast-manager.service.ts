@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 
 import {
   ToastNoAnimation,
-  ToastrService,
+  RetoastService,
   type ActiveToast,
   type GlobalConfig,
   type IndividualConfig,
@@ -11,17 +11,17 @@ import { quotes, type Quote } from './quotes';
 
 @Injectable({ providedIn: 'root' })
 export class ToastManagerService {
-  private toastr = inject(ToastrService);
+  private toastr = inject(RetoastService);
   private lastInserted: number[] = [];
 
   public openToastAnimation(options?: GlobalConfig, type?: string, quote?: Quote) {
-    const _options = { ...(options ?? this.toastr.toastrConfig) };
+    const _options = { ...(options ?? this.toastr.retoastConfig) };
 
     return this.openToast(_options, quote, _options.iconClasses[type ?? 'success']);
   }
 
   public openToastNoAnimation(options?: GlobalConfig, type?: string, quote?: Quote) {
-    const _options = { ...(options ?? this.toastr.toastrConfig) };
+    const _options = { ...(options ?? this.toastr.retoastConfig) };
 
     return this.openToast(
       {
@@ -34,11 +34,11 @@ export class ToastManagerService {
   }
 
   public clearToasts() {
-    this.toastr.clear();
+    this.toastr.clearAll();
   }
 
   public clearLastToast() {
-    this.toastr.clear(this.lastInserted.pop());
+    this.toastr.clearToast(this.lastInserted.pop()!);
   }
 
   private openToast<C extends ToastNoAnimation>(
@@ -50,7 +50,7 @@ export class ToastManagerService {
     const inserted = this.toastr.show<C>(
       message || 'Success',
       title,
-      options ?? this.toastr.toastrConfig,
+      options ?? this.toastr.retoastConfig,
       type,
     );
 
@@ -67,4 +67,3 @@ export class ToastManagerService {
     return quote;
   }
 }
-

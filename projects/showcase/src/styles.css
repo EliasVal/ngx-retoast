@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@import "../../ngx-retoast/src/lib/styles/toastr.css";
+@import "../../ngx-retoast/src/lib/styles/retoast.css";
 
 @layer components {
   .btn-pink {

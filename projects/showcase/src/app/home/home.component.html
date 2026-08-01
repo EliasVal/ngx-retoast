@@ -40,7 +40,9 @@
                     [(ngModel)]="options.enableHtml"
                     id="enableHtml"
                   />
-                  <label class="flex items-center mb-2-label" for="enableHtml"> Enable HTML (message) </label>
+                  <label class="flex items-center mb-2-label" for="enableHtml">
+                    Enable HTML (message)
+                  </label>
                 </div>
                 <div class="flex items-center mb-2">
                   <input
@@ -49,7 +51,9 @@
                     [(ngModel)]="options.tapToDismiss"
                     id="tapToDismiss"
                   />
-                  <label class="flex items-center mb-2-label" for="tapToDismiss"> Tap to dismiss </label>
+                  <label class="flex items-center mb-2-label" for="tapToDismiss">
+                    Tap to dismiss
+                  </label>
                 </div>
                 <div class="flex items-center mb-2">
                   <input
@@ -58,7 +62,9 @@
                     [(ngModel)]="options.closeButton"
                     id="closeButton"
                   />
-                  <label class="flex items-center mb-2-label" for="closeButton"> Close button </label>
+                  <label class="flex items-center mb-2-label" for="closeButton">
+                    Close button
+                  </label>
                 </div>
                 <div class="flex items-center mb-2">
                   <input
@@ -79,7 +85,9 @@
                     id="countDuplicates"
                     [disabled]="!options.preventDuplicates"
                   />
-                  <label class="flex items-center mb-2-label" for="countDuplicates"> Count duplicates </label>
+                  <label class="flex items-center mb-2-label" for="countDuplicates">
+                    Count duplicates
+                  </label>
                 </div>
                 <div class="flex items-center mb-2 ml-2">
                   <input
@@ -112,7 +120,9 @@
                     [(ngModel)]="options.newestOnTop"
                     id="newestOnTop"
                   />
-                  <label class="flex items-center mb-2-label" for="newestOnTop"> New toasts on top </label>
+                  <label class="flex items-center mb-2-label" for="newestOnTop">
+                    New toasts on top
+                  </label>
                 </div>
                 <div class="flex items-center mb-2">
                   <input
@@ -121,7 +131,9 @@
                     [(ngModel)]="options.progressBar"
                     id="progressBar"
                   />
-                  <label class="flex items-center mb-2-label" for="progressBar"> Progress bar </label>
+                  <label class="flex items-center mb-2-label" for="progressBar">
+                    Progress bar
+                  </label>
                 </div>
               </div>
               <fieldset class="mb-4 mb-4">
@@ -138,7 +150,9 @@
                     [disabled]="!options.progressBar"
                     id="progressBarDecreasing"
                   />
-                  <label class="flex items-center mb-2-label" for="progressBarDecreasing">Decreasing</label>
+                  <label class="flex items-center mb-2-label" for="progressBarDecreasing"
+                    >Decreasing</label
+                  >
                 </div>
                 <div class="flex items-center mb-2">
                   <input
@@ -150,7 +164,9 @@
                     [disabled]="!options.progressBar"
                     id="progressBarIncreasing"
                   />
-                  <label class="flex items-center mb-2-label" for="progressBarIncreasing"> Increasing </label>
+                  <label class="flex items-center mb-2-label" for="progressBarIncreasing">
+                    Increasing
+                  </label>
                 </div>
               </fieldset>
             </div>
@@ -170,7 +186,9 @@
                   id="toastTimeout"
                   aria-describedby="toastTimeoutHelp"
                 />
-                <small id="toastTimeoutHelp" class="mt-1 text-sm text-gray-500">0 never expires</small>
+                <small id="toastTimeoutHelp" class="mt-1 text-sm text-gray-500"
+                  >0 never expires</small
+                >
               </div>
               <div class="mb-4 mb-4">
                 <label for="toastExtendedTimeout">
@@ -249,19 +267,21 @@
                   <strong>Maximum Toasts</strong>
                 </label>
                 <input
-                  [(ngModel)]="toastr.toastrConfig.maxOpened"
+                  [(ngModel)]="toastr.retoastConfig.maxOpened"
                   (ngModelChange)="fixNumber('maxOpened')"
                   type="text"
                   class="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   id="maxNumberToasts"
                   aria-describedby="maxNumberToastsHelp"
                 />
-                <small id="maxNumberToastsHelp" class="mt-1 text-sm text-gray-500">0 is no limit</small>
+                <small id="maxNumberToastsHelp" class="mt-1 text-sm text-gray-500"
+                  >0 is no limit</small
+                >
                 <div class="flex items-center mb-2">
                   <input
                     type="checkbox"
                     class="flex items-center mb-2-input"
-                    [(ngModel)]="toastr.toastrConfig.autoDismiss"
+                    [(ngModel)]="toastr.retoastConfig.autoDismiss"
                     id="autoDismiss"
                   />
                   <label for="autoDismiss" class="flex items-center mb-2-label" for="autoDismiss"
@@ -275,7 +295,7 @@
                 </label>
                 <input
                   type="text"
-                  [(ngModel)]="toastr.toastrConfig.easeTime"
+                  [(ngModel)]="toastr.retoastConfig.easeTime"
                   (ngModelChange)="fixNumber('easeTime')"
                   class="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   id="toastExtendedTimeout"
@@ -298,7 +318,9 @@
                         value="success"
                         id="typesuccess"
                       />
-                      <label class="flex items-center mb-2-label" for="typesuccess"> Success </label>
+                      <label class="flex items-center mb-2-label" for="typesuccess">
+                        Success
+                      </label>
                     </div>
                     <div class="flex items-center mb-2">
                       <input
@@ -320,7 +342,9 @@
                         value="warning"
                         id="typewarning"
                       />
-                      <label class="flex items-center mb-2-label" for="typewarning"> Warning </label>
+                      <label class="flex items-center mb-2-label" for="typewarning">
+                        Warning
+                      </label>
                     </div>
                     <div class="flex items-center mb-2">
                       <input
@@ -349,7 +373,9 @@
                         value="toast-top-right"
                         id="toast-top-right"
                       />
-                      <label for="toast-top-right" class="flex items-center mb-2-label">Top Right</label>
+                      <label for="toast-top-right" class="flex items-center mb-2-label"
+                        >Top Right</label
+                      >
                     </div>
                     <div class="flex items-center mb-2">
                       <input
@@ -360,7 +386,9 @@
                         value="toast-bottom-right"
                         id="toast-bottom-right"
                       />
-                      <label for="toast-bottom-right" class="flex items-center mb-2-label">Bottom Right</label>
+                      <label for="toast-bottom-right" class="flex items-center mb-2-label"
+                        >Bottom Right</label
+                      >
                     </div>
                     <div class="flex items-center mb-2">
                       <input
@@ -371,7 +399,9 @@
                         value="toast-bottom-left"
                         id="toast-bottom-left"
                       />
-                      <label for="toast-bottom-left" class="flex items-center mb-2-label">Bottom Left</label>
+                      <label for="toast-bottom-left" class="flex items-center mb-2-label"
+                        >Bottom Left</label
+                      >
                     </div>
                     <div class="flex items-center mb-2">
                       <input
@@ -382,7 +412,9 @@
                         value="toast-top-left"
                         id="toast-top-left"
                       />
-                      <label for="toast-top-left" class="flex items-center mb-2-label">Top Left</label>
+                      <label for="toast-top-left" class="flex items-center mb-2-label"
+                        >Top Left</label
+                      >
                     </div>
                     <div class="flex items-center mb-2">
                       <input
@@ -393,7 +425,9 @@
                         value="toast-top-full-width"
                         id="top-full-width"
                       />
-                      <label for="top-full-width" class="flex items-center mb-2-label">Top Full Width</label>
+                      <label for="top-full-width" class="flex items-center mb-2-label"
+                        >Top Full Width</label
+                      >
                     </div>
                     <div class="flex items-center mb-2">
                       <input
@@ -417,7 +451,9 @@
                         value="toast-top-center"
                         id="toast-top-center"
                       />
-                      <label for="toast-top-center" class="flex items-center mb-2-label">Top Center</label>
+                      <label for="toast-top-center" class="flex items-center mb-2-label"
+                        >Top Center</label
+                      >
                     </div>
                     <div class="flex items-center mb-2">
                       <input
@@ -433,11 +469,9 @@
                       >
                     </div>
                   </fieldset>
-
                 </div>
               </div>
             </div>
-
           </div>
           <hr />
           <div class="flex flex-wrap -mx-4 mb-4">
@@ -472,23 +506,22 @@
               </div>
             </div>
           </div>
-            <div class="flex flex-wrap -mx-4 mb-2">
-              <div class="w-full px-4 text-center">
-                <p class="mb-1">
-                  <small>Example Custom Toasts:</small>
-                </p>
-                <button
-                  (click)="toastManager.openToastNoAnimation(options, type, { message, title })"
-                  type="button"
-                  class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2-sm inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2-light mx-1"
-                >
-                  No Animations
-                </button>
-              </div>
+          <div class="flex flex-wrap -mx-4 mb-2">
+            <div class="w-full px-4 text-center">
+              <p class="mb-1">
+                <small>Example Custom Toasts:</small>
+              </p>
+              <button
+                (click)="toastManager.openToastNoAnimation(options, type, { message, title })"
+                type="button"
+                class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2-sm inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2-light mx-1"
+              >
+                No Animations
+              </button>
             </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-

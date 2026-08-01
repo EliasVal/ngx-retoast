@@ -5,15 +5,16 @@
     "@angular/common": ">=20.0.0",
     "@angular/core": ">=20.0.0",
     "@angular/cdk": ">=20.0.0",
-    "@angular/platform-browser": ">=20.0.0"
+    "@angular/platform-browser": ">=20.0.0",
+    "rxjs": "^7.8.2"
   },
   "dependencies": {
     "tslib": "^2.3.0"
   },
   "sideEffects": false,
   "exports": {
-    "./toastr.css": {
-      "default": "./styles/toastr.css"
+    "./retoast.css": {
+      "default": "./styles/retoast.css"
     }
   }
 }

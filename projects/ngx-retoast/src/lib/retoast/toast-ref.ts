@@ -1,4 +1,6 @@
 import { signal } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+
 export interface ToastCloseFn {
   detach(): void;
 }
@@ -11,11 +13,22 @@ export class ToastRef<T> {
   public readonly timeoutReset = signal<number>(0);
   public readonly duplicateCount = signal<number>(0);
 
+  private readonly _onShown = new Subject<void>();
+  public readonly onShown: Observable<void> = this._onShown.asObservable();
+
+  private readonly _onHidden = new Subject<void>();
+  public readonly onHidden: Observable<void> = this._onHidden.asObservable();
+
+  private readonly _onTap = new Subject<void>();
+  public readonly onTap: Observable<void> = this._onTap.asObservable();
+
+  private readonly _onAction = new Subject<unknown>();
+  public readonly onAction: Observable<unknown> = this._onAction.asObservable();
+
   constructor(private readonly _overlayRef: ToastCloseFn) {}
 
   public manualClose() {
     this.manualClosed.set(true);
-    this.close();
   }
 
   public close(): void {
@@ -23,6 +36,11 @@ export class ToastRef<T> {
     this.state.set('closing');
     this._overlayRef.detach();
     this.state.set('closed');
+    this._onHidden.next();
+    this._onHidden.complete();
+    this._onShown.complete();
+    this._onTap.complete();
+    this._onAction.complete();
   }
 
   public isInactive() {
@@ -32,15 +50,24 @@ export class ToastRef<T> {
   public activate() {
     if (this.state() === 'inactive') {
       this.state.set('active');
+      this._onShown.next();
     }
   }
 
   public onDuplicate(resetTimeout: boolean, countDuplicate: boolean) {
     if (resetTimeout) {
-      this.timeoutReset.update(v => v + 1);
+      this.timeoutReset.update((v) => v + 1);
     }
     if (countDuplicate) {
-      this.duplicateCount.update(v => v + 1);
+      this.duplicateCount.update((v) => v + 1);
     }
+  }
+
+  public _triggerTap() {
+    this._onTap.next();
+  }
+
+  public _triggerAction(action: unknown) {
+    this._onAction.next(action);
   }
 }

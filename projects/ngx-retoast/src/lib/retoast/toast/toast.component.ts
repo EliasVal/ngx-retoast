@@ -15,7 +15,10 @@ import { ToastBase } from '../base-toast/base-toast.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Toast<ConfigPayload = unknown> extends ToastBase<ConfigPayload> {
-  protected readonly params = { easeTime: this.toastPackage.config.easeTime, easing: this.toastPackage.config.easing };
+  protected readonly params = {
+    easeTime: this.toastPackage.config.easeTime,
+    easing: this.toastPackage.config.easing,
+  };
   private readonly cdr = inject(ChangeDetectorRef);
 
   override remove(): void {
@@ -24,9 +27,9 @@ export class Toast<ConfigPayload = unknown> extends ToastBase<ConfigPayload> {
     clearTimeout(this.timeout);
     this.state.set('removed');
     this.cdr.detectChanges(); // Force DOM update to apply toast-out class without NgZone
-    
+
     this.timeout = window.setTimeout(
-      () => this.toastrService.remove(this.toastPackage.toastId),
+      () => this.toastPackage.toastRef.close(),
       +this.params.easeTime,
     );
   }

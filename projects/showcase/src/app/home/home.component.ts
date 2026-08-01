@@ -1,5 +1,5 @@
-import { Component, VERSION, ChangeDetectionStrategy, inject, viewChildren } from '@angular/core';
-import { GlobalConfig, ToastrService } from 'ngx-retoast';
+import { Component, VERSION, ChangeDetectionStrategy, inject } from '@angular/core';
+import { GlobalConfig, RetoastService } from 'ngx-retoast';
 import { FormsModule } from '@angular/forms';
 import { ToastManagerService } from '../toast-manager.service';
 
@@ -12,7 +12,7 @@ const types = ['success', 'error', 'info', 'warning'];
   imports: [FormsModule],
 })
 export class HomeComponent {
-  protected toastr = inject(ToastrService);
+  protected toastr = inject(RetoastService);
   protected toastManager = inject(ToastManagerService);
 
   options: GlobalConfig;
@@ -22,9 +22,8 @@ export class HomeComponent {
   version = VERSION;
   enableBootstrap = false;
 
-
   constructor() {
-    this.options = this.toastr.toastrConfig;
+    this.options = this.toastr.retoastConfig;
   }
 
   fixNumber<K extends keyof GlobalConfig>(field: K): void {
@@ -38,8 +37,4 @@ export class HomeComponent {
       this.options.positionClass = 'toast-top-right';
     }
   }
-
-  setInlinePosition(index: number) {
-  }
 }
-
