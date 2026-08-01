@@ -1,35 +1,22 @@
 <div class="flex flex-col gap-4">
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Disable Timeouts</legend>
-    <select
-      class="select w-full"
-      [formField]="timeoutsForm.disableTimeOut"
-      id="disableTimeOutSelect"
-    >
-      @for (dto of disableTimeOuts; track dto.id) {
-        <option [value]="dto.value">{{ dto.labelCode }}{{ dto.extra }}</option>
-      }
-    </select>
-  </fieldset>
-
   <div class="grid grid-cols-2 gap-4">
     <fieldset class="fieldset">
-      <legend class="fieldset-legend">Timeout (ms)</legend>
+      <legend class="fieldset-legend">Duration (ms)</legend>
       <input
         type="number"
         class="input w-full"
-        [formField]="timeoutsForm.timeOut"
-        id="timeOutInput"
+        [formField]="timeoutsForm.duration"
+        id="durationInput"
       />
     </fieldset>
 
     <fieldset class="fieldset">
-      <legend class="fieldset-legend">Extended Timeout (ms)</legend>
+      <legend class="fieldset-legend">Hover Exit Duration (ms)</legend>
       <input
         type="number"
         class="input w-full"
-        [formField]="timeoutsForm.extendedTimeOut"
-        id="extendedTimeOutInput"
+        [formField]="timeoutsForm.resumeDuration"
+        id="resumeDurationInput"
       />
     </fieldset>
 
@@ -44,12 +31,12 @@
     </fieldset>
 
     <fieldset class="fieldset">
-      <legend class="fieldset-legend">Ease Time (ms)</legend>
+      <legend class="fieldset-legend">Animation Duration (ms)</legend>
       <input
         type="number"
         class="input w-full"
-        [formField]="timeoutsForm.easeTime"
-        id="easeTimeInput"
+        [formField]="timeoutsForm.animationDuration"
+        id="animationDurationInput"
       />
     </fieldset>
   </div>

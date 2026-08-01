@@ -3,13 +3,11 @@ import { ComponentType } from '@angular/cdk/portal';
 import { ToastRef } from './toast-ref';
 
 export type ProgressAnimationType = 'increasing' | 'decreasing';
-export type DisableTimoutType = boolean | 'timeOut' | 'extendedTimeOut';
 
 export interface IndividualConfig<ConfigPayload = unknown> {
-  disableTimeOut: DisableTimoutType;
-  timeOut: number;
+  duration: number;
   closeButton: boolean;
-  extendedTimeOut: number;
+  resumeDuration: number;
   progressBar: boolean;
   progressAnimation: ProgressAnimationType;
   enableHtml: boolean;
@@ -17,8 +15,8 @@ export interface IndividualConfig<ConfigPayload = unknown> {
   positionClass: string;
   titleClass: string;
   messageClass: string;
-  easing: string;
-  easeTime: string | number;
+  animationEasing: string;
+  animationDuration: number;
   tapToDismiss: boolean;
   toastComponent?: ComponentType<unknown>;
   newestOnTop: boolean;
@@ -39,8 +37,8 @@ export interface GlobalConfig<C = unknown> extends IndividualConfig<C> {
   iconClasses: Partial<RetoastIconClasses>;
   preventDuplicates: boolean;
   countDuplicates: boolean;
-  resetTimeoutOnDuplicate: boolean;
-  duplicateTitleCheck: boolean;
+  resetDurationOnDuplicate: boolean;
+  includeTitleInDuplicateCheck: boolean;
 }
 
 export class ToastPackage<ConfigPayload = unknown> {
@@ -76,8 +74,8 @@ export const DefaultNoComponentGlobalConfig: GlobalConfig = {
   newestOnTop: true,
   preventDuplicates: false,
   countDuplicates: false,
-  resetTimeoutOnDuplicate: false,
-  duplicateTitleCheck: false,
+  resetDurationOnDuplicate: false,
+  includeTitleInDuplicateCheck: false,
 
   iconClasses: {
     error: 'toast-error',
@@ -87,17 +85,16 @@ export const DefaultNoComponentGlobalConfig: GlobalConfig = {
   },
 
   closeButton: false,
-  disableTimeOut: false,
-  timeOut: 5000,
-  extendedTimeOut: 1000,
+  duration: 5000,
+  resumeDuration: 1000,
   enableHtml: false,
   progressBar: false,
   toastClass: 'ngx-retoast',
   positionClass: 'toast-top-right',
   titleClass: 'toast-title',
   messageClass: 'toast-message',
-  easing: 'ease-in',
-  easeTime: 150,
+  animationEasing: 'ease-in',
+  animationDuration: 150,
   tapToDismiss: true,
   progressAnimation: 'decreasing',
 };

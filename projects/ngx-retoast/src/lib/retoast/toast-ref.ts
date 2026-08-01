@@ -10,7 +10,7 @@ export class ToastRef<T> {
 
   public readonly state = signal<'inactive' | 'active' | 'closing' | 'closed'>('inactive');
   public readonly manualClosed = signal(false);
-  public readonly timeoutReset = signal<number>(0);
+  public readonly durationReset = signal<number>(0);
   public readonly duplicateCount = signal<number>(0);
 
   private readonly _onShown = new Subject<void>();
@@ -54,9 +54,9 @@ export class ToastRef<T> {
     }
   }
 
-  public onDuplicate(resetTimeout: boolean, countDuplicate: boolean) {
-    if (resetTimeout) {
-      this.timeoutReset.update((v) => v + 1);
+  public onDuplicate(resetDuration: boolean, countDuplicate: boolean) {
+    if (resetDuration) {
+      this.durationReset.update((v) => v + 1);
     }
     if (countDuplicate) {
       this.duplicateCount.update((v) => v + 1);

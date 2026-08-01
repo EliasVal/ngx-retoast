@@ -45,7 +45,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   public readonly options = linkedSignal<IndividualConfig<ConfigPayload>>(
     () => this.toastPackage.config,
   );
-  public readonly originalTimeout = computed(() => this.toastPackage.config.timeOut);
+  public readonly originalTimeout = computed(() => this.toastPackage.config.duration);
   public readonly toastClasses = computed(
     () => `${this.toastPackage.toastType} ${this.toastPackage.config.toastClass}`,
   );
@@ -68,10 +68,10 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
 
     let previousTimeoutReset = 0;
     effect(() => {
-      const current = this.toastPackage.toastRef.timeoutReset();
+      const current = this.toastPackage.toastRef.durationReset();
       if (current > previousTimeoutReset) {
         previousTimeoutReset = current;
-        untracked(() => this.resetTimeout());
+        untracked(() => this.resetDuration());
       }
     });
 
@@ -92,12 +92,9 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     const options = this.options();
     this.state.set('active');
 
-    if (
-      !(options.disableTimeOut === true || options.disableTimeOut === 'timeOut') &&
-      options.timeOut
-    ) {
-      this.timeout = window.setTimeout(() => this.remove(), options.timeOut);
-      this.hideTime = new Date().getTime() + options.timeOut;
+    if (options.duration > 0) {
+      this.timeout = window.setTimeout(() => this.remove(), options.duration);
+      this.hideTime = new Date().getTime() + options.duration;
       if (options.progressBar) {
         this.intervalId = window.setInterval(() => this.updateProgress(), 10);
       }
@@ -110,12 +107,12 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   protected updateProgress() {
     const options = this.options();
 
-    if (!options.timeOut) {
+    if (!options.duration) {
       return;
     }
     const now = new Date().getTime();
     const remaining = this.hideTime - now;
-    this.width.set((remaining / options.timeOut) * 100);
+    this.width.set((remaining / options.duration) * 100);
     if (options.progressAnimation === 'increasing') {
       this.width.update((width) => 100 - width);
     }
@@ -127,20 +124,17 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     }
   }
 
-  protected resetTimeout() {
+  protected resetDuration() {
     const options = this.options();
     clearTimeout(this.timeout);
     clearInterval(this.intervalId);
     this.state.set('active');
 
-    this.options.update((options) => ({ ...options, timeOut: this.originalTimeout() }));
+    this.options.update((options) => ({ ...options, duration: this.originalTimeout() }));
     
-    if (
-      !(options.disableTimeOut === true || options.disableTimeOut === 'timeOut') &&
-      this.originalTimeout()
-    ) {
+    if (this.originalTimeout() > 0) {
       this.timeout = window.setTimeout(() => this.remove(), this.originalTimeout());
-      this.hideTime = new Date().getTime() + (this.originalTimeout() || 0);
+      this.hideTime = new Date().getTime() + this.originalTimeout();
       this.width.set(-1);
       if (options.progressBar) {
         this.intervalId = window.setInterval(() => this.updateProgress(), 10);
@@ -175,32 +169,25 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   protected stickAround() {
     if (this.state() === 'removed') return;
 
-    if (this.options().disableTimeOut !== 'extendedTimeOut') {
-      clearTimeout(this.timeout);
-      this.options.update((options) => ({ ...options, timeOut: 0 }));
-      this.hideTime = 0;
+    clearTimeout(this.timeout);
+    this.options.update((options) => ({ ...options, duration: 0 }));
+    this.hideTime = 0;
 
-      // disable progressBar
-      clearInterval(this.intervalId);
-      this.width.set(0);
-    }
+    // disable progressBar
+    clearInterval(this.intervalId);
+    this.width.set(0);
   }
 
   protected delayedHideToast() {
     const options = this.options();
-    if (
-      options.disableTimeOut === true ||
-      options.disableTimeOut === 'extendedTimeOut' ||
-      options.extendedTimeOut === 0 ||
-      this.state() === 'removed'
-    ) {
+    if (options.resumeDuration === 0 || this.state() === 'removed') {
       return;
     }
-    const extendedTimeOut = options.extendedTimeOut;
+    const resumeDuration = options.resumeDuration;
     clearTimeout(this.timeout);
-    this.timeout = window.setTimeout(() => this.remove(), extendedTimeOut);
-    this.options.update((options) => ({ ...options, timeOut: extendedTimeOut }));
-    this.hideTime = new Date().getTime() + (extendedTimeOut || 0);
+    this.timeout = window.setTimeout(() => this.remove(), resumeDuration);
+    this.options.update((options) => ({ ...options, duration: resumeDuration }));
+    this.hideTime = new Date().getTime() + resumeDuration;
     this.width.set(-1);
     if (options.progressBar) {
       this.intervalId = window.setInterval(() => this.updateProgress(), 10);

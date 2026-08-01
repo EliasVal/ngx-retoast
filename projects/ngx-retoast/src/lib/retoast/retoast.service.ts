@@ -215,12 +215,12 @@ export class RetoastService {
    * @returns The duplicate active toast, or null if none.
    */
   public findDuplicate(title: string | undefined = '', message = ''): ActiveToast<unknown> | null {
-    const { duplicateTitleCheck } = this.retoastConfig;
+    const { includeTitleInDuplicateCheck } = this.retoastConfig;
 
     for (const toast of this.toasts()) {
-      const hasDuplicateTitle = duplicateTitleCheck && toast.title === title;
+      const hasDuplicateTitle = includeTitleInDuplicateCheck && toast.title === title;
 
-      if ((!duplicateTitleCheck || hasDuplicateTitle) && toast.message === message) {
+      if ((!includeTitleInDuplicateCheck || hasDuplicateTitle) && toast.message === message) {
         return toast;
       }
     }
@@ -330,7 +330,7 @@ export class RetoastService {
 
     if (duplicate) {
       duplicate.toastRef.onDuplicate(
-        this.retoastConfig.resetTimeoutOnDuplicate && config.timeOut > 0,
+        this.retoastConfig.resetDurationOnDuplicate && config.duration > 0,
         this.retoastConfig.countDuplicates,
       );
 

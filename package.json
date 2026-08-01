@@ -20,14 +20,7 @@
     "@angular/material": "^22.1.0",
     "@angular/platform-browser": "^22.1.0",
     "@angular/router": "^22.1.0",
-    "@lucide/angular": "^1.28.0",
-    "@ng-icons/core": ">=32.0.0 <34.0.0",
-    "@ng-icons/lucide": ">=32.0.0 <34.0.0",
-    "@spartan-ng/brain": "^1.3.0",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
     "rxjs": "^7.8.2",
-    "tailwind-merge": "^3.5.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
@@ -38,7 +31,6 @@
     "@eslint/js": "^10.0.1",
     "@playwright/cli": "^0.1.17",
     "@playwright/test": "1.62.1",
-    "@spartan-ng/cli": "^1.3.0",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/node": "^26.1.2",
     "angular-eslint": "22.1.0",

@@ -47,7 +47,7 @@ import { provideRetoast } from 'ngx-retoast';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRetoast({
-      timeOut: 5000,
+      duration: 5000,
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),
@@ -154,9 +154,8 @@ Options can be provided globally via `provideRetoast(options)` or individually p
 
 | Option              | Type                        | Default           | Description                                       |
 | :------------------ | :-------------------------- | :---------------- | :------------------------------------------------ |
-| `timeOut`           | number                      | 5000              | Time to live in milliseconds.                     |
-| `extendedTimeOut`   | number                      | 1000              | Time to close after a user hovers over the toast. |
-| `disableTimeOut`    | boolean / string            | false             | Disable timeOut, extendedTimeOut, or both.        |
+| `duration`          | number                      | 5000              | Time to live in milliseconds.                     |
+| `resumeDuration`    | number                      | 1000              | Time to close after a user hovers over the toast. |
 | `closeButton`       | boolean                     | false             | Show a close button.                              |
 | `progressBar`       | boolean                     | false             | Show a progress bar indicating time remaining.    |
 | `progressAnimation` | 'decreasing' / 'increasing' | 'decreasing'      | Animation direction of the progress bar.          |
@@ -167,8 +166,8 @@ Options can be provided globally via `provideRetoast(options)` or individually p
 | `positionClass`     | string                      | 'toast-top-right' | CSS class for the toast container position.       |
 | `titleClass`        | string                      | 'toast-title'     | CSS class for the toast title.                    |
 | `messageClass`      | string                      | 'toast-message'   | CSS class for the toast message.                  |
-| `easing`            | string                      | 'ease-in'         | CSS easing function for animations.               |
-| `easeTime`          | string / number             | 300               | Animation duration in milliseconds.               |
+| `animationEasing`   | string                      | 'ease-in'         | CSS easing function for animations.               |
+| `animationDuration` | number                      | 300               | Animation duration in milliseconds.               |
 | `toastComponent`    | Component                   | Toast             | The Angular component to use for rendering.       |
 
 ### Global Only Options
@@ -181,8 +180,8 @@ These options can only be set globally via `provideRetoast(options)`.
 | `autoDismiss`             | boolean | false   | Automatically dismiss the oldest toast when maxOpened is reached. |
 | `preventDuplicates`       | boolean | false   | Block duplicate messages from being shown.                        |
 | `countDuplicates`         | boolean | false   | Display a counter on duplicate toasts.                            |
-| `resetTimeoutOnDuplicate` | boolean | false   | Reset the timeout when a duplicate is received.                   |
-| `duplicateTitleCheck`     | boolean | false   | Include the title when checking for duplicates.                   |
+| `resetDurationOnDuplicate` | boolean | false   | Reset the duration when a duplicate is received.                  |
+| `includeTitleInDuplicateCheck` | boolean | false   | Include the title when checking for duplicates.                   |
 
 ## Custom Toast Component
 

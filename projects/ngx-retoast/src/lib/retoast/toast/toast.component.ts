@@ -6,8 +6,8 @@ import { ToastBase } from '../base-toast/base-toast.component';
   templateUrl: '../base-toast/base-toast.component.html',
   styleUrl: 'toast.component.css',
   host: {
-    '[style.--animation-easing]': 'params.easing',
-    '[style.--animation-duration]': 'params.easeTime + "ms"',
+    '[style.--animation-easing]': 'params.animationEasing',
+    '[style.--animation-duration]': 'params.animationDuration + "ms"',
     '[class.toast-in]': 'state() === "active"',
     '[class.toast-out]': 'state() === "removed"',
   },
@@ -16,8 +16,8 @@ import { ToastBase } from '../base-toast/base-toast.component';
 })
 export class Toast<ConfigPayload = unknown> extends ToastBase<ConfigPayload> {
   protected readonly params = {
-    easeTime: this.toastPackage.config.easeTime,
-    easing: this.toastPackage.config.easing,
+    animationDuration: this.toastPackage.config.animationDuration,
+    animationEasing: this.toastPackage.config.animationEasing,
   };
 
   override remove(): void {
@@ -29,7 +29,7 @@ export class Toast<ConfigPayload = unknown> extends ToastBase<ConfigPayload> {
 
     this.timeout = window.setTimeout(
       () => this.toastPackage.toastRef.close(),
-      +this.params.easeTime,
+      +this.params.animationDuration,
     );
   }
 }

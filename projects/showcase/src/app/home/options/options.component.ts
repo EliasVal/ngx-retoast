@@ -13,8 +13,8 @@ export class OptionsComponent {
   optionsForm = form(this.options, (s) => {
     // Disable countDuplicates, resetTimeoutOnDuplicate, duplicateTitleCheck if preventDuplicates is false
     disabled(s.countDuplicates, { when: ({ valueOf }) => !valueOf(s.preventDuplicates) });
-    disabled(s.resetTimeoutOnDuplicate, { when: ({ valueOf }) => !valueOf(s.preventDuplicates) });
-    disabled(s.duplicateTitleCheck, { when: ({ valueOf }) => !valueOf(s.preventDuplicates) });
+    disabled(s.resetDurationOnDuplicate, { when: ({ valueOf }) => !valueOf(s.preventDuplicates) });
+    disabled(s.includeTitleInDuplicateCheck, { when: ({ valueOf }) => !valueOf(s.preventDuplicates) });
   });
 
   protected readonly checkboxes = linkedSignal(() => [
@@ -49,13 +49,13 @@ export class OptionsComponent {
       extraClass: 'ml-2',
     },
     {
-      field: this.optionsForm.resetTimeoutOnDuplicate,
-      id: 'resetTimeoutOnDuplicate',
-      label: 'Reset timeout on duplicate',
+      field: this.optionsForm.resetDurationOnDuplicate,
+      id: 'resetDurationOnDuplicate',
+      label: 'Reset duration on duplicate',
       extraClass: 'ml-2',
     },
     {
-      field: this.optionsForm.duplicateTitleCheck,
+      field: this.optionsForm.includeTitleInDuplicateCheck,
       id: 'duplicateTitleCheck',
       label: 'Include title in duplicate checks',
       extraClass: 'ml-2',
