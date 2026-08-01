@@ -1,0 +1,22 @@
+<div class="flex flex-col gap-4">
+  <label class="flex items-center justify-between gap-3 cursor-pointer">
+    <h3 class="card-title text-base">Progress Bar</h3>
+
+    <input
+      type="checkbox"
+      class="toggle toggle-md"
+      [formField]="progressForm.progressBar"
+      id="progressBar"
+    />
+  </label>
+
+  <select
+    class="select w-full"
+    [formField]="progressForm.progressAnimation"
+    id="progressAnimationSelect"
+  >
+    @for (anim of progressAnimations; track anim.id) {
+      <option [value]="anim.value">{{ anim.label }}</option>
+    }
+  </select>
+</div>

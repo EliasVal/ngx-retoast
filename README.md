@@ -9,12 +9,6 @@ This project is a complete rewrite and modernization of the popular `ngx-toastr`
 - Angular >= 20.2
 - Zoneless Only
 
-## Features
-
-- No @angular/animations
-- A11y Friendly: ARIA live regions and accessibility best practices built-in
-- Customizable: Create custom toasts through component inheritance
-
 ## Installation
 
 ```bash
@@ -150,8 +144,9 @@ All toast methods accept an optional `IndividualConfig` object to override globa
 - `info(message, title?, config?)`
 - `warning(message, title?, config?)`
 - `show(message, title?, config?, type?)`
-- `clear(toastId?)` - Clears all toasts, or a specific toast if an ID is provided.
-- `remove(toastId)` - Removes a specific toast.
+- `clearAll()` - Clears all active toasts.
+- `clearToast(toastId)` - Clears a specific toast.
+- `findDuplicate(title?, message?)` - Returns an active duplicate toast if one exists.
 
 ### Global & Individual Options
 
@@ -187,7 +182,7 @@ These options can only be set globally via `provideRetoast(options)`.
 | `preventDuplicates`       | boolean | false   | Block duplicate messages from being shown.                        |
 | `countDuplicates`         | boolean | false   | Display a counter on duplicate toasts.                            |
 | `resetTimeoutOnDuplicate` | boolean | false   | Reset the timeout when a duplicate is received.                   |
-| `includeTitleDuplicates`  | boolean | false   | Include the title when checking for duplicates.                   |
+| `duplicateTitleCheck`     | boolean | false   | Include the title when checking for duplicates.                   |
 
 ## Custom Toast Component
 
@@ -245,6 +240,8 @@ Change all imports from `ngx-toastr` to `ngx-retoast`.
 - `ToastrService` -> `RetoastService`
 - `provideToastr` -> `provideRetoast`
 - `ToastrModule` -> **Removed.** (Use standalone `provideRetoast` instead)
+- `clear(toastId?)` -> `clearAll()` or `clearToast(toastId)`
+- `remove(toastId)` -> **Removed.** (Use `clearToast(toastId)` instead)
 
 ```typescript
 // Before
@@ -261,14 +258,14 @@ Update your global stylesheet or `angular.json` styles array:
 // Before
 @import 'ngx-toastr/toastr';
 // After
-@import 'ngx-retoast/styles/retoast.css';
+@import 'ngx-retoast/retoast.css';
 ```
 
 ```scss
 // Before
 @import 'ngx-toastr/toastr.css';
 // After
-@import 'ngx-retoast/styles/retoast.css';
+@import 'ngx-retoast/retoast.css';
 ```
 
 ### 3. Event Handling (Observables)

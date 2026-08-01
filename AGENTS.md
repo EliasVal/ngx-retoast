@@ -63,3 +63,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use the `providedIn: 'root'` option for singleton services
 - Prefer the `@Service` decorator over `@Injectable({providedIn: 'root'})` for new singleton services (Angular v22+)
 - Use the `inject()` function instead of constructor injection
+
+## Tooling & Package Management
+
+- Always use `pnpm` as the package manager for installing dependencies or running scripts.

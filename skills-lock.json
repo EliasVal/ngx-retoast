@@ -6,6 +6,12 @@
       "sourceType": "github",
       "skillPath": "angular-developer/SKILL.md",
       "computedHash": "390535a21ca293acbef16e588cfd77f954b0f0eae23d45477b47b0b0ce00eb47"
+    },
+    "daisyui": {
+      "source": "saadeghi/daisyui",
+      "sourceType": "github",
+      "skillPath": "skills/daisyui/SKILL.md",
+      "computedHash": "2c1857b181a033f75c656fc30dbc70767e102ab8e4364c3863aa5bedf32d001e"
     }
   }
 }

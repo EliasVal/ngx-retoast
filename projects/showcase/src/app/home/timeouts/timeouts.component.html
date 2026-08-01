@@ -1,0 +1,66 @@
+<div class="flex flex-col gap-4">
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Disable Timeouts</legend>
+    <select
+      class="select w-full"
+      [formField]="timeoutsForm.disableTimeOut"
+      id="disableTimeOutSelect"
+    >
+      @for (dto of disableTimeOuts; track dto.id) {
+        <option [value]="dto.value">{{ dto.labelCode }}{{ dto.extra }}</option>
+      }
+    </select>
+  </fieldset>
+
+  <div class="grid grid-cols-2 gap-4">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Timeout (ms)</legend>
+      <input
+        type="number"
+        class="input w-full"
+        [formField]="timeoutsForm.timeOut"
+        id="timeOutInput"
+      />
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Extended Timeout (ms)</legend>
+      <input
+        type="number"
+        class="input w-full"
+        [formField]="timeoutsForm.extendedTimeOut"
+        id="extendedTimeOutInput"
+      />
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Max Toasts (0 = Infinite)</legend>
+      <input
+        type="number"
+        class="input w-full"
+        [formField]="timeoutsForm.maxOpened"
+        id="maxOpenedInput"
+      />
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Ease Time (ms)</legend>
+      <input
+        type="number"
+        class="input w-full"
+        [formField]="timeoutsForm.easeTime"
+        id="easeTimeInput"
+      />
+    </fieldset>
+  </div>
+
+  <label class="flex items-center gap-3 cursor-pointer mt-2">
+    <input
+      type="checkbox"
+      class="toggle toggle-md"
+      [formField]="timeoutsForm.autoDismiss"
+      id="autoDismissToggle"
+    />
+    <span class="text-sm leading-none">Auto dismiss on max</span>
+  </label>
+</div>

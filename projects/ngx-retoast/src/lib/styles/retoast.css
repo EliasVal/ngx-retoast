@@ -103,11 +103,9 @@ button.toast-close-button {
   background-position: 15px center;
   background-repeat: no-repeat;
   background-size: 24px;
-  box-shadow: 0 0 12px #999999;
   color: #FFFFFF;
 }
 .toast-container .ngx-retoast:hover {
-  box-shadow: 0 0 12px #000000;
   opacity: 1;
   cursor: pointer;
 }

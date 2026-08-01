@@ -7,6 +7,7 @@ import {
   inject,
   linkedSignal,
   signal,
+  untracked,
   type OnDestroy,
 } from '@angular/core';
 import { ToastPackage, type IndividualConfig } from '../retoast-config';
@@ -55,13 +56,13 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   constructor() {
     effect(() => {
       if (this.toastPackage.toastRef.state() === 'active') {
-        this.activateToast();
+        untracked(() => this.activateToast());
       }
     });
 
     effect(() => {
       if (this.toastPackage.toastRef.manualClosed()) {
-        this.remove();
+        untracked(() => this.remove());
       }
     });
 
@@ -70,7 +71,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
       const current = this.toastPackage.toastRef.timeoutReset();
       if (current > previousTimeoutReset) {
         previousTimeoutReset = current;
-        this.resetTimeout();
+        untracked(() => this.resetTimeout());
       }
     });
 
@@ -109,7 +110,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
   protected updateProgress() {
     const options = this.options();
 
-    if (this.width() === 0 || this.width() === 100 || !options.timeOut) {
+    if (!options.timeOut) {
       return;
     }
     const now = new Date().getTime();
@@ -133,10 +134,18 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     this.state.set('active');
 
     this.options.update((options) => ({ ...options, timeOut: this.originalTimeout() }));
-    this.timeout = window.setTimeout(() => this.remove(), this.originalTimeout());
-    this.hideTime = new Date().getTime() + (this.originalTimeout() || 0);
-    this.width.set(-1);
-    if (options.progressBar) this.intervalId = window.setInterval(() => this.updateProgress(), 10);
+    
+    if (
+      !(options.disableTimeOut === true || options.disableTimeOut === 'timeOut') &&
+      this.originalTimeout()
+    ) {
+      this.timeout = window.setTimeout(() => this.remove(), this.originalTimeout());
+      this.hideTime = new Date().getTime() + (this.originalTimeout() || 0);
+      this.width.set(-1);
+      if (options.progressBar) {
+        this.intervalId = window.setInterval(() => this.updateProgress(), 10);
+      }
+    }
   }
 
   /**
@@ -146,6 +155,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
     if (this.state() === 'removed') return;
 
     clearTimeout(this.timeout);
+    clearInterval(this.intervalId);
     this.state.set('removed');
     this.timeout = window.setTimeout(
       () => this.toastPackage.toastRef.close(),
@@ -187,6 +197,7 @@ export class ToastBase<ConfigPayload = unknown> implements OnDestroy {
       return;
     }
     const extendedTimeOut = options.extendedTimeOut;
+    clearTimeout(this.timeout);
     this.timeout = window.setTimeout(() => this.remove(), extendedTimeOut);
     this.options.update((options) => ({ ...options, timeOut: extendedTimeOut }));
     this.hideTime = new Date().getTime() + (extendedTimeOut || 0);

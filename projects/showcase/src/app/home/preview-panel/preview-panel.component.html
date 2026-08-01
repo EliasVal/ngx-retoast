@@ -1,0 +1,40 @@
+<h2 class="text-2xl font-bold tracking-tight">Preview</h2>
+
+<div class="card bg-base-200">
+  <div class="card-body gap-5">
+    <h3 class="card-title text-base">Content</h3>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Title</legend>
+      <input
+        type="text"
+        class="input w-full"
+        [formField]="contentForm.title"
+        placeholder="e.g. Success!"
+        id="titleInput"
+      />
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Message</legend>
+      <textarea
+        class="textarea w-full"
+        [formField]="contentForm.message"
+        rows="3"
+        placeholder="e.g. Your settings have been saved."
+        id="messageInput"
+      ></textarea>
+    </fieldset>
+
+    <div class="divider"></div>
+
+    <button class="btn btn-primary w-full" (click)="openToast()">Show Toast</button>
+
+    <div class="grid grid-cols-2 gap-3">
+      <button class="btn btn-outline w-full" (click)="openToastNoAnimation()">No Animation</button>
+      <button class="btn btn-soft w-full" (click)="clearLastToast()">Clear Last</button>
+    </div>
+
+    <button class="btn btn-ghost btn-error w-full" (click)="clearToasts()">Clear All Toasts</button>
+  </div>
+</div>

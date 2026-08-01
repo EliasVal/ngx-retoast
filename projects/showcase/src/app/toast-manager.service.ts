@@ -11,17 +11,17 @@ import { quotes, type Quote } from './quotes';
 
 @Injectable({ providedIn: 'root' })
 export class ToastManagerService {
-  private toastr = inject(RetoastService);
+  private retoast = inject(RetoastService);
   private lastInserted: number[] = [];
 
   public openToastAnimation(options?: GlobalConfig, type?: string, quote?: Quote) {
-    const _options = { ...(options ?? this.toastr.retoastConfig) };
+    const _options = { ...(options ?? this.retoast.retoastConfig) };
 
     return this.openToast(_options, quote, _options.iconClasses[type ?? 'success']);
   }
 
   public openToastNoAnimation(options?: GlobalConfig, type?: string, quote?: Quote) {
-    const _options = { ...(options ?? this.toastr.retoastConfig) };
+    const _options = { ...(options ?? this.retoast.retoastConfig) };
 
     return this.openToast(
       {
@@ -34,11 +34,11 @@ export class ToastManagerService {
   }
 
   public clearToasts() {
-    this.toastr.clearAll();
+    this.retoast.clearAll();
   }
 
   public clearLastToast() {
-    this.toastr.clearToast(this.lastInserted.pop()!);
+    this.retoast.clearToast(this.lastInserted.pop()!);
   }
 
   private openToast<C extends ToastNoAnimation>(
@@ -47,10 +47,10 @@ export class ToastManagerService {
     type?: string,
   ): ActiveToast<C> | undefined {
     const { message, title } = this.getMessage(quote);
-    const inserted = this.toastr.show<C>(
+    const inserted = this.retoast.show<C>(
       message || 'Success',
       title,
-      options ?? this.toastr.retoastConfig,
+      options ?? this.retoast.retoastConfig,
       type,
     );
 

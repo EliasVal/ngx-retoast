@@ -1,0 +1,8 @@
+<div class="flex flex-col gap-4">
+  @for (box of checkboxes(); track box.id) {
+    <label class="flex items-center gap-3 cursor-pointer" [class]="box.extraClass">
+      <input type="checkbox" class="toggle toggle-md" [formField]="box.field" [id]="box.id" />
+      <span class="text-sm leading-none">{{ box.label }}</span>
+    </label>
+  }
+</div>

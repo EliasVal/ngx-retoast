@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ToastBase } from '../base-toast/base-toast.component';
 
 @Component({
@@ -19,14 +19,13 @@ export class Toast<ConfigPayload = unknown> extends ToastBase<ConfigPayload> {
     easeTime: this.toastPackage.config.easeTime,
     easing: this.toastPackage.config.easing,
   };
-  private readonly cdr = inject(ChangeDetectorRef);
 
   override remove(): void {
     if (this.state() === 'removed') return;
 
     clearTimeout(this.timeout);
+    clearInterval(this.intervalId);
     this.state.set('removed');
-    this.cdr.detectChanges(); // Force DOM update to apply toast-out class without NgZone
 
     this.timeout = window.setTimeout(
       () => this.toastPackage.toastRef.close(),

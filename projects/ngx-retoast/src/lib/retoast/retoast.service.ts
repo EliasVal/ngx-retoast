@@ -63,6 +63,9 @@ export class RetoastService {
   public previousToastMessage: string | undefined;
   private index = 0;
 
+  /**
+   * Sets the custom container for the toasts.
+   */
   public set overlayContainer(container: ToastContainerDirective | undefined) {
     if (container) {
       this._customContainer = container.getContainerElement();
@@ -71,6 +74,14 @@ export class RetoastService {
     }
   }
 
+  /**
+   * Shows a custom toast.
+   * @param message The toast message.
+   * @param title The toast title.
+   * @param override Configuration overrides.
+   * @param type The toast type class.
+   * @returns The active toast reference.
+   */
   public show<C extends ToastBase = ToastBase, ConfigPayload = unknown>(
     message?: string,
     title?: string,
@@ -85,6 +96,13 @@ export class RetoastService {
     ) as ActiveToast<C>;
   }
 
+  /**
+   * Shows a success toast.
+   * @param message The toast message.
+   * @param title The toast title.
+   * @param override Configuration overrides.
+   * @returns The active toast reference.
+   */
   public success<ConfigPayload = unknown>(
     message?: string,
     title?: string,
@@ -94,6 +112,13 @@ export class RetoastService {
     return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
+  /**
+   * Shows an error toast.
+   * @param message The toast message.
+   * @param title The toast title.
+   * @param override Configuration overrides.
+   * @returns The active toast reference.
+   */
   public error<ConfigPayload = unknown>(
     message?: string,
     title?: string,
@@ -103,6 +128,13 @@ export class RetoastService {
     return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
+  /**
+   * Shows an info toast.
+   * @param message The toast message.
+   * @param title The toast title.
+   * @param override Configuration overrides.
+   * @returns The active toast reference.
+   */
   public info<ConfigPayload = unknown>(
     message?: string,
     title?: string,
@@ -112,6 +144,13 @@ export class RetoastService {
     return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
+  /**
+   * Shows a warning toast.
+   * @param message The toast message.
+   * @param title The toast title.
+   * @param override Configuration overrides.
+   * @returns The active toast reference.
+   */
   public warning<ConfigPayload = unknown>(
     message?: string,
     title?: string,
@@ -121,6 +160,9 @@ export class RetoastService {
     return this._buildNotification(type, message, title, this.applyConfig(override));
   }
 
+  /**
+   * Clears and triggers exit animations for all active toasts.
+   */
   public clearAll() {
     const currentToasts = [...this.toasts()];
     for (const toast of currentToasts) {
@@ -128,23 +170,31 @@ export class RetoastService {
     }
   }
 
+  /**
+   * Clears and triggers exit animation for a specific toast by ID.
+   * @param id The ID of the toast to clear.
+   */
   public clearToast(id: number) {
     const toast = this._findToast(id);
     toast?.toastRef.manualClose();
   }
 
+  /**
+   * Internally removes a toast from the active array and activates the next queued toast if any.
+   * @param toastId The ID of the toast to remove.
+   */
   private _removeToast(toastId: number) {
     const found = this._findToast(toastId);
-    if (!found) return false;
+    if (!found) return;
 
     found.toastRef.close();
     this.toasts.update((toasts) => toasts.filter((t) => t.toastId !== toastId));
 
-    if (!this.retoastConfig.maxOpened || this.toasts().length === 0) return true;
-    if (this.currentlyActive() >= this.retoastConfig.maxOpened) return true;
+    if (!this.retoastConfig.maxOpened || this.toasts().length === 0) return;
+    if (this.currentlyActive() >= this.retoastConfig.maxOpened) return;
 
     const nextInactive = this.toasts().find((t) => t.toastRef.isInactive());
-    if (!nextInactive) return true;
+    if (!nextInactive) return;
 
     const container = this.getContainerElement(nextInactive.toastPackage.config.positionClass);
     if (nextInactive.toastPackage.config.toastComponent === ToastBase) {
@@ -156,10 +206,14 @@ export class RetoastService {
         nextInactive.portal.changeDetectorRef.detectChanges();
       });
     }
-
-    return true;
   }
 
+  /**
+   * Finds a duplicate toast based on title and message.
+   * @param title The toast title.
+   * @param message The toast message.
+   * @returns The duplicate active toast, or null if none.
+   */
   public findDuplicate(title: string | undefined = '', message = ''): ActiveToast<unknown> | null {
     const { duplicateTitleCheck } = this.retoastConfig;
 
@@ -174,14 +228,29 @@ export class RetoastService {
     return null;
   }
 
+  /**
+   * Applies individual configuration overrides on top of the global configuration.
+   * @param override The configuration overrides.
+   * @returns The merged global configuration.
+   */
   private applyConfig(override: Partial<IndividualConfig> = {}): GlobalConfig {
     return { ...this.retoastConfig, ...override };
   }
 
+  /**
+   * Finds an active toast by its ID.
+   * @param id The ID of the toast.
+   * @returns The active toast, or undefined if not found.
+   */
   private _findToast(id: number): ActiveToast<unknown> | undefined {
     return this.toasts().find(({ toastId }) => toastId === id);
   }
 
+  /**
+   * Gets or creates the DOM element for a specific position class container.
+   * @param positionClass The position class.
+   * @returns The container DOM element.
+   */
   private getContainerElement(positionClass: string): HTMLElement {
     if (this.overlayContainers.has(positionClass)) {
       return this.overlayContainers.get(positionClass)!;
@@ -203,7 +272,11 @@ export class RetoastService {
     return container;
   }
 
-  // Animate the toast list to be like Svelte's FLIP. (Smoothly shift list instead of jumping)
+  /**
+   * Animates the toast list using FLIP logic (First, Last, Invert, Play) to smoothly shift items.
+   * @param container The container DOM element.
+   * @param action The DOM manipulation callback.
+   */
   private animateFlip(container: HTMLElement, action: () => void) {
     const children = Array.from(container.children) as HTMLElement[];
     const firstRects = new Map<HTMLElement, DOMRect>();
@@ -241,6 +314,13 @@ export class RetoastService {
     });
   }
 
+  /**
+   * Handles duplicate toast prevention logic during toast creation.
+   * @param title The toast title.
+   * @param message The toast message.
+   * @param config The global configuration.
+   * @returns The duplicate toast if one exists and preventDuplicates is true, otherwise null.
+   */
   private _handleDuplicate(
     title: string | undefined,
     message: string | undefined,
@@ -260,8 +340,14 @@ export class RetoastService {
     return null;
   }
 
+  /**
+   * Checks if the maximum opened toasts limit has been reached, optionally clearing the oldest one.
+   * @returns True if the new toast should be kept inactive in the queue, false otherwise.
+   */
   private _checkMaxOpened(): boolean {
-    if (this.retoastConfig.maxOpened && this.currentlyActive() >= this.retoastConfig.maxOpened) {
+    if (!this.retoastConfig.maxOpened) return false;
+
+    if (this.currentlyActive() >= this.retoastConfig.maxOpened) {
       if (this.retoastConfig.autoDismiss) {
         this.clearToast(this.toasts()[0].toastId);
         return false;
@@ -273,6 +359,13 @@ export class RetoastService {
     return false;
   }
 
+  /**
+   * Attaches the toast component to the provided portal outlet.
+   * @param toastComponent The component type.
+   * @param toastPackage The toast package metadata.
+   * @param outlet The DOM portal outlet.
+   * @returns The attached component reference.
+   */
   private _attachComponent(
     toastComponent: Type<unknown>,
     toastPackage: ToastPackage,
@@ -286,6 +379,12 @@ export class RetoastService {
     return portal;
   }
 
+  /**
+   * Activates a toast, playing its entrance animation and triggering lifecycle hooks.
+   * @param ins The active toast reference.
+   * @param config The global configuration.
+   * @param container The container DOM element.
+   */
   private _activateToast(ins: ActiveToast<unknown>, config: GlobalConfig, container: HTMLElement) {
     if (config.toastComponent === ToastBase) {
       ins.toastRef.activate();
@@ -299,6 +398,14 @@ export class RetoastService {
     });
   }
 
+  /**
+   * The core factory method that builds, configures, and spawns a new toast notification.
+   * @param toastType The class type of the toast.
+   * @param message The toast message.
+   * @param title The toast title.
+   * @param config The configuration.
+   * @returns The spawned active toast.
+   */
   private _buildNotification(
     toastType: string,
     message: string | undefined,
