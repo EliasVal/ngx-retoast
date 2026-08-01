@@ -25,12 +25,6 @@
           },
           "defaultConfiguration": "production"
         },
-        "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "tsConfig": "projects/ngx-retoast/tsconfig.spec.json"
-          }
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
@@ -95,9 +89,6 @@
             }
           },
           "defaultConfiguration": "development"
-        },
-        "test": {
-          "builder": "@angular/build:unit-test"
         },
         "e2e": {
           "builder": "playwright-ng-schematics:playwright",

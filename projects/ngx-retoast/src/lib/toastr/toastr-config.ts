@@ -57,7 +57,7 @@ export class ToastPackage<ConfigPayload = unknown> {
   ) {}
 
   triggerTap(): void {
-    this.tap.update(v => v + 1);
+    this.tap.update((v) => v + 1);
     if (this.config.tapToDismiss) {
       this.toastRef.manualClose();
     }
@@ -95,7 +95,7 @@ export const DefaultNoComponentGlobalConfig: GlobalConfig = {
   titleClass: 'toast-title',
   messageClass: 'toast-message',
   easing: 'ease-in',
-  easeTime: 300,
+  easeTime: 150,
   tapToDismiss: true,
   progressAnimation: 'decreasing',
 };

@@ -1,4 +1,13 @@
-import { ComponentRef, Injectable, Injector, SecurityContext, inject, signal, computed, ApplicationRef } from '@angular/core';
+import {
+  ComponentRef,
+  Injectable,
+  Injector,
+  SecurityContext,
+  inject,
+  signal,
+  computed,
+  ApplicationRef,
+} from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -15,6 +24,7 @@ import {
   TOAST_CONFIG,
 } from './toastr-config';
 import { ToastBase } from './base-toast/base-toast.component';
+import { ToastContainerDirective } from './toast-container.directive';
 
 export interface ActiveToast<C> {
   toastId: number;
@@ -22,25 +32,35 @@ export interface ActiveToast<C> {
   message: string;
   portal: ComponentRef<C>;
   toastRef: ToastRef<C>;
+  toastPackage: ToastPackage;
 }
 
 @Injectable({ providedIn: 'root' })
 export class ToastrService {
-  private overlayContainer = inject(OverlayContainer);
+  private _cdkOverlayContainer = inject(OverlayContainer);
+  private _customContainer?: HTMLElement;
   private _injector = inject(Injector);
   private sanitizer = inject(DomSanitizer);
   private appRef = inject(ApplicationRef);
   private document = inject(DOCUMENT);
 
   toastrConfig: GlobalConfig;
-  
+
   toasts = signal<ActiveToast<unknown>[]>([]);
-  currentlyActive = computed(() => this.toasts().filter(t => !t.toastRef.isInactive()).length);
-  
+  currentlyActive = computed(() => this.toasts().filter((t) => !t.toastRef.isInactive()).length);
+
   private overlayContainers = new Map<string, HTMLElement>();
 
   previousToastMessage: string | undefined;
   private index = 0;
+
+  set overlayContainer(container: ToastContainerDirective | undefined) {
+    if (container) {
+      this._customContainer = container.getContainerElement();
+    } else {
+      this._customContainer = undefined;
+    }
+  }
 
   constructor() {
     const token = inject<ToastToken>(TOAST_CONFIG);
@@ -129,13 +149,17 @@ export class ToastrService {
       return false;
     }
     found.activeToast.toastRef.close();
-    this.toasts.update(toasts => toasts.filter(t => t.toastId !== toastId));
-    
+    this.toasts.update((toasts) => toasts.filter((t) => t.toastId !== toastId));
+
     if (this.toastrConfig.maxOpened && this.toasts().length > 0) {
       if (this.currentlyActive() < this.toastrConfig.maxOpened) {
-        const nextInactive = this.toasts().find(t => t.toastRef.isInactive());
+        const nextInactive = this.toasts().find((t) => t.toastRef.isInactive());
         if (nextInactive) {
-          nextInactive.toastRef.activate();
+          const container = this.getContainerElement(nextInactive.toastPackage.config.positionClass);
+          this.animateFlip(container, () => {
+            nextInactive.toastRef.activate();
+            nextInactive.portal.changeDetectorRef.detectChanges();
+          });
         }
       }
     }
@@ -175,7 +199,11 @@ export class ToastrService {
       if (positionClass) {
         container.classList.add(...positionClass.split(' '));
       }
-      this.overlayContainer.getContainerElement().appendChild(container);
+      if (this._customContainer) {
+        this._customContainer.appendChild(container);
+      } else {
+        this._cdkOverlayContainer.getContainerElement().appendChild(container);
+      }
       this.overlayContainers.set(positionClass, container);
     }
     return this.overlayContainers.get(positionClass)!;
@@ -184,29 +212,30 @@ export class ToastrService {
   private animateFlip(container: HTMLElement, action: () => void) {
     const children = Array.from(container.children) as HTMLElement[];
     const firstRects = new Map<HTMLElement, DOMRect>();
-    children.forEach(child => firstRects.set(child, child.getBoundingClientRect()));
+    children.forEach((child) => firstRects.set(child, child.getBoundingClientRect()));
 
     action();
 
     const remainingChildren = Array.from(container.children) as HTMLElement[];
-    remainingChildren.forEach(child => {
+    remainingChildren.forEach((child) => {
       const first = firstRects.get(child);
       if (first) {
         const last = child.getBoundingClientRect();
+        if (first.width === 0 && first.height === 0) return; // Ignore elements that were display:none
         const deltaY = first.top - last.top;
         const deltaX = first.left - last.left;
-        
+
         if (deltaX !== 0 || deltaY !== 0) {
           child.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
           child.style.transition = 'none';
-          
+
           // Force reflow
           child.getBoundingClientRect();
 
           requestAnimationFrame(() => {
             child.style.transform = '';
             child.style.transition = 'transform 150ms ease-in-out';
-            
+
             const cleanup = () => {
               child.style.transition = '';
               child.removeEventListener('transitionend', cleanup);
@@ -234,7 +263,7 @@ export class ToastrService {
       this.toastrConfig.resetTimeoutOnDuplicate && config.timeOut > 0,
       this.toastrConfig.countDuplicates,
     );
-    
+
     if (
       ((this.toastrConfig.includeTitleDuplicates && title) || message) &&
       this.toastrConfig.preventDuplicates &&
@@ -249,6 +278,7 @@ export class ToastrService {
       keepInactive = true;
       if (this.toastrConfig.autoDismiss) {
         this.clear(this.toasts()[0].toastId);
+        keepInactive = false;
       }
     }
 
@@ -259,7 +289,7 @@ export class ToastrService {
     } else {
       container.appendChild(toastWrapper);
     }
-    
+
     const outlet = new DomPortalOutlet(toastWrapper, this.appRef, this._injector);
 
     this.index = this.index + 1;
@@ -279,7 +309,7 @@ export class ToastrService {
         } else {
           this.animateFlip(container, action);
         }
-      }
+      },
     });
     const toastPackage = new ToastPackage(
       this.index,
@@ -294,26 +324,23 @@ export class ToastrService {
     const toastInjector = Injector.create({ providers, parent: this._injector });
 
     const componentPortal = new ComponentPortal(config.toastComponent, null, toastInjector);
-    
+
     let portal!: ComponentRef<unknown>;
     const attachAction = () => {
       portal = outlet.attach(componentPortal) as ComponentRef<unknown>;
       portal.changeDetectorRef.detectChanges();
     };
-    
-    if (config.toastComponent === ToastBase) {
-      attachAction();
-    } else {
-      this.animateFlip(container, attachAction);
-    }
+
+    attachAction();
     toastRef.componentInstance = portal.instance;
-    
+
     const ins: ActiveToast<unknown> = {
       toastId: this.index,
       title: title || '',
       message: message || '',
       toastRef,
       portal,
+      toastPackage,
     };
 
     if (!keepInactive) {
@@ -321,13 +348,14 @@ export class ToastrService {
         ins.toastRef.activate();
         ins.portal.changeDetectorRef.detectChanges();
       } else {
-        setTimeout(() => {
+        this.animateFlip(container, () => {
           ins.toastRef.activate();
+          ins.portal.changeDetectorRef.detectChanges();
         });
       }
     }
 
-    this.toasts.update(toasts => [...toasts, ins]);
+    this.toasts.update((toasts) => [...toasts, ins]);
     return ins;
   }
 }

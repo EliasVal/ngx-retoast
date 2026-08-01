@@ -1,5 +1,12 @@
 You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
+## Project Context
+
+- **Name:** ngx-retoast
+- **Description:** A modern Angular fork of `ngx-toastr` that removes RxJS, NgModules, and NgZone, and self-implements Portals and Overlays in favor of the Angular CDK.
+- **Library Source:** Located in `projects/ngx-retoast`.
+- **Showcase & Testing:** The library is tested via the showcase app in `projects/showcase`, which provides a UI for the API. E2E tests should be written using Playwright.
+
 ## TypeScript Best Practices
 
 - Use strict type checking

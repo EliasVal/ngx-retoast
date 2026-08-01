@@ -1,3 +1,7 @@
+# ngx-retoast
+
+This project was forked from [ngx-toastr](https://github.com/scttcper/ngx-toastr)
+
 ## Features
 
 - Toast Component Injection using Angular CDK Overlay
@@ -34,20 +38,6 @@ npm install ngx-retoast --save
 ```scss
 // regular style toast
 @import 'ngx-retoast/src/lib/styles/toastr';
-
-// bootstrap style toast
-// or import a bootstrap 4 alert styled design (SASS ONLY)
-// should be after your bootstrap imports, it uses bs4 variables, mixins, functions
-@import 'ngx-retoast/src/lib/styles/toastr-bs4-alert';
-
-// if you'd like to use it without importing all of bootstrap it requires
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins';
-// bootstrap 4
-@import 'ngx-retoast/src/lib/styles/toastr-bs4-alert';
-// boostrap 5
-@import 'ngx-retoast/src/lib/styles/toastr-bs5-alert';
 ```
 
 - If you are using angular-cli you can add it to your angular.json
@@ -198,7 +188,41 @@ export interface ActiveToast {
 }
 ```
 
+### Put toasts in your own container
 
+Put toasts in a specific div inside your application. This should probably be
+somewhere that doesn't get deleted. Make sure that your container has
+an `aria-live="polite"` attribute, so that any time a toast is injected into
+the container it is announced by screen readers.
+
+Add a div with `toastContainer` directive on it.
+
+```typescript
+import { Component, OnInit, viewChild, inject } from '@angular/core';
+import { ToastContainerDirective, ToastrService } from 'ngx-retoast';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [ToastContainerDirective],
+  template: `
+    <h1><a (click)="onClick()">Click</a></h1>
+    <div aria-live="polite" toastContainer></div>
+  `,
+})
+export class AppComponent implements OnInit {
+  toastContainer = viewChild(ToastContainerDirective);
+  toastrService = inject(ToastrService);
+
+  ngOnInit() {
+    this.toastrService.overlayContainer = this.toastContainer()!;
+  }
+
+  onClick() {
+    this.toastrService.success('in div');
+  }
+}
+```
 
 ## Functions
 
@@ -228,9 +252,7 @@ toast component in the global config to use
 import { provideNoAnimationToastr } from 'ngx-retoast';
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideNoAnimationToastr(),
-  ],
+  providers: [provideNoAnimationToastr()],
 });
 ```
 

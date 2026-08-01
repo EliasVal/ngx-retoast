@@ -8,7 +8,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "ngx-retoast": ["./dist/ngx-retoast"]
+      "ngx-retoast": ["./projects/ngx-retoast/src/public-api.ts"]
     },
     "skipLibCheck": true,
     "isolatedModules": true,
@@ -28,13 +28,7 @@
       "path": "./projects/ngx-retoast/tsconfig.lib.json"
     },
     {
-      "path": "./projects/ngx-retoast/tsconfig.spec.json"
-    },
-    {
       "path": "./projects/showcase/tsconfig.app.json"
-    },
-    {
-      "path": "./projects/showcase/tsconfig.spec.json"
     }
   ]
 }
