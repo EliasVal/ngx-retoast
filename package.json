@@ -9,6 +9,11 @@
     "e2e": "ng e2e",
     "lint": "ng lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eliasval/ngx-retoast"
+  },
+  "license": "MIT",
   "private": true,
   "packageManager": "pnpm@11.14.0",
   "dependencies": {
