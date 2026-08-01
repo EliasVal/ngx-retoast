@@ -1,8 +1,6 @@
 # ngx-retoast
 
-A modern, high-performance Angular toast notification library.
-
-This project is a complete rewrite and modernization of the popular `ngx-toastr` library, designed specifically for modern Angular applications. It removes legacy dependencies and embraces the latest Angular features for maximum performance and simplicity.
+This project is a rewrite of the archived `ngx-toastr` library, designed for modern Angular applications.
 
 ## Requirements
 
