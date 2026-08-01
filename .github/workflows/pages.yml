@@ -38,7 +38,7 @@ jobs:
         run: pnpm install
 
       - name: Build ngx-retoast
-        run: pnpm build ngx-retoast
+        run: pnpm run build:lib
 
       - name: Build showcase
         run: pnpm build showcase --base-href /ngx-retoast/
