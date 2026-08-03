@@ -7,11 +7,46 @@ on:
 
 permissions:
   contents: read
-  id-token: write # Required for NPM provenance
+  id-token: write
+
+concurrency:
+  group: "publish"
+  cancel-in-progress: true
 
 jobs:
-  publish:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 11
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Setup Playwright
+        run: pnpm playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run Tests
+        run: pnpm e2e --project=${{ matrix.browser }}
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: release
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,5 +71,3 @@ jobs:
       - name: Publish to NPM
         working-directory: dist/ngx-retoast
         run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,16 +1,25 @@
 {
   "name": "ngx-retoast",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "description": "A toast notification library for Angular",
+  "keywords": [
+    "ngx-retoast",
+    "toast",
+    "notification",
+    "angular",
+    "toastr"
+  ],
   "peerDependencies": {
-    "@angular/common": ">=20.0.0",
-    "@angular/core": ">=20.0.0",
-    "@angular/cdk": ">=20.0.0",
-    "@angular/platform-browser": ">=20.0.0",
+    "@angular/common": ">=20.0.0 <23.0.0",
+    "@angular/core": ">=20.0.0 <23.0.0",
+    "@angular/cdk": ">=20.0.0 <23.0.0",
+    "@angular/platform-browser": ">=20.0.0 <23.0.0",
     "rxjs": "^7.8.2"
   },
   "dependencies": {
     "tslib": "^2.3.0"
   },
+  "license": "MIT",
   "sideEffects": false,
   "publishConfig": {
     "access": "public",
@@ -24,5 +33,9 @@
     "./retoast.css": {
       "default": "./styles/retoast.css"
     }
+  },
+  "homepage": "https://eliasval.github.io/ngx-retoast",
+  "bugs": {
+    "url": "https://github.com/eliasval/ngx-retoast/issues"
   }
 }

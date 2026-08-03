@@ -7,7 +7,7 @@
     "build": "ng build",
     "build:lib": "ng build ngx-retoast && node scripts/copy-assets.js",
     "watch": "ng build --watch --configuration development",
-    "e2e": "ng e2e",
+    "e2e": "playwright test",
     "lint": "ng lint"
   },
   "repository": {

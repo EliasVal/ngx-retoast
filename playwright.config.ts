@@ -22,15 +22,20 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     process.env['CI'] ? ['github'] : ['list'],
-    ['monocart-reporter', {
-      name: 'ngx-toastr e2e coverage',
-      outputFile: './coverage-reports/index.html',
-      coverage: {
-        entryFilter: (file: any) => file.url.includes('main.js') || file.url.includes('ngx-retoast'),
-        sourceFilter: (sourcePath: string) => !sourcePath.includes('node_modules') && sourcePath.includes('projects/ngx-retoast'),
-        reports: ['v8', 'console-summary', 'lcovonly']
-      }
-    }]
+    [
+      'monocart-reporter',
+      {
+        name: 'ngx-toastr e2e coverage',
+        outputFile: './coverage-reports/index.html',
+        coverage: {
+          entryFilter: (file: any) =>
+            file.url.includes('main.js') || file.url.includes('ngx-retoast'),
+          sourceFilter: (sourcePath: string) =>
+            !sourcePath.includes('node_modules') && sourcePath.includes('projects/ngx-retoast'),
+          reports: ['v8', 'console-summary', 'lcovonly', 'json-summary'],
+        },
+      },
+    ],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -39,6 +44,13 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+  },
+
+  webServer: {
+    command: 'pnpm start',
+    url: 'http://localhost:4200',
+    reuseExistingServer: !process.env['CI'],
+    timeout: 120 * 1000,
   },
 
   /* Configure projects for major browsers */
