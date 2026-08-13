@@ -2,23 +2,62 @@
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
-    <title>Angular Retoast</title>
+    <title>ngx-retoast | Angular Toast Notifications</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-    <meta name="description" content="Easy Toasts for Angular" />
-    <meta content="Angular2,ng2,retoast,angular,toast,notification,ngmodule,ngx-retoast" />
-    <!-- Schema.org for Google -->
-    <meta itemprop="name" content="Angular Retoast" />
+    <!-- Prevents indexing issues if accessed via different URLs -->
+    <link rel="canonical" href="https://eliasval.github.io/ngx-retoast/" />
+
+    <!-- Sneak the alternative keyword naturally into the description -->
+    <meta
+      name="description"
+      content="A modern, lightweight toast notification library for Angular."
+    />
+
+    <!-- Fixed missing 'name' attribute and removed legacy ng2 terms -->
+    <meta
+      name="keywords"
+      content="angular, toast, notifications, snackbar, ngx-retoast, ngx-toastr alternative, ngx-toastr"
+    />
+
+    <!-- Open Graph (Note: Changed 'name' to 'property' which is the correct OG standard) -->
+    <meta property="og:title" content="ngx-retoast | Angular Toast Notifications" />
+    <meta property="og:url" content="https://eliasval.github.io/ngx-retoast/" />
+    <meta property="og:site_name" content="ngx-retoast" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="A modern, lightweight toast notification library for Angular."
+    />
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Angular Retoast" />
-    <!-- Open Graph general (Facebook, Pinterest & Google+) -->
-    <meta name="og:title" content="Angular Retoast" />
-    <meta name="og:url" content="https://ngx-retoast.netlify.com/" />
-    <meta name="og:site_name" content="Angular Retoast" />
-    <meta name="og:type" content="website" />
+    <meta name="twitter:title" content="ngx-retoast | Angular Toast Notifications" />
+    <meta
+      name="twitter:description"
+      content="A modern, lightweight toast notification library for Angular."
+    />
+
+    <!-- Schema.org Developer Application -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "ngx-retoast",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "description": "A modern Angular toast notification library.",
+        "url": "https://eliasval.github.io/ngx-retoast/",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

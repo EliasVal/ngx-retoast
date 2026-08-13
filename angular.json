@@ -52,7 +52,9 @@
                 "input": "projects/showcase/public"
               }
             ],
-            "styles": ["projects/showcase/src/styles.css"]
+            "styles": ["projects/showcase/src/styles.css"],
+            "server": "projects/showcase/src/main.server.ts",
+            "prerender": true
           },
           "configurations": {
             "production": {
@@ -68,7 +70,16 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": {
+                "fonts": true,
+                "scripts": true,
+                "styles": {
+                  "inlineCritical": false,
+                  "minify": true,
+                  "removeSpecialComments": true
+                }
+              }
             },
             "development": {
               "optimization": false,
